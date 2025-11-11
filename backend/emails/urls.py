@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import EmailViewSet
 
 router = DefaultRouter()
-router.register(r'emails', EmailViewSet)
+router.register(r'', EmailViewSet, basename='email')
 
 urlpatterns = [
     path('', include(router.urls)),
