@@ -21,6 +21,7 @@ def mailgun_webhook(request):
         # Create ticket from email
         Ticket.objects.create(
             subject=subject,
+            body=body,
             sender=sender,
             status='open',
             priority='medium'
