@@ -14,6 +14,7 @@ class Ticket(models.Model):
     ]
 
     subject = models.CharField(max_length=255)
+    body = models.TextField(blank=True)
     sender = models.EmailField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='open')
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium')
@@ -30,4 +31,3 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"{self.subject} - {self.sender}"
-
