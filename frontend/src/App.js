@@ -1,11 +1,17 @@
 import './App.css';
-import TestConnection from './TestConnection';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/Login';
 
 function App() {
   return (
+   <BrowserRouter>
     <div className="App">
-      <TestConnection />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<div>Dashboard - Coming Soon</div>} />
+      </Routes>
     </div>
+    </BrowserRouter>
   );
 }
 
