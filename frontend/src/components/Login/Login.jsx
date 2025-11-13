@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -35,11 +36,9 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        // Handle successful login (e.g., redirect, store token, etc.)
         localStorage.setItem("token", data.token);
         navigate("/");
       } else {
-        // Handle errors
         setErrors(data);
       }
     } catch (error) {
@@ -51,42 +50,44 @@ export default function Login() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      {errors.general && (
-        <div style={{ color: "red", marginBottom: "10px" }}>
-          {errors.general}
-        </div>
-      )}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
+    <div className="login-container">
+      <div className="login-box">
+        <h1 className="login-title">Login</h1>
+        {errors.general && (
+          <div className="login-error">
+            {errors.general}
+          </div>
+        )}
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Username:</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label>Password:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Logging in..." : "Login"}
-        </button>
-      </form>
+          <button type="submit" disabled={isSubmitting} className="login-button">
+            {isSubmitting ? "Logging in..." : "Login"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
