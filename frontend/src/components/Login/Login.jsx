@@ -49,7 +49,7 @@ export default function Login() {
     try {
       const csrftoken = getCookie('csrftoken');
       
-      const response = await fetch("/login/", {
+      const response = await fetch("/api/login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
