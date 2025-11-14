@@ -1,7 +1,23 @@
 .dashboard-container {
+  display: flex;
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
+}
+
+/* Ensure children align from the top and main content grows */
+.dashboard-container {
+  align-items: flex-start;
+}
+
+.main-content {
+  flex: 1 1 auto;
+  min-width: 0; /* allow flex children to shrink properly */
+}
+
+/* small visual tweak to separate sidebar and main area */
+.sidebar + .main-content {
+  margin-left: 20px;
 }
 
 .dashboard-header {

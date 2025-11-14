@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
+import Sidebar from "../Sidebar/Sidebar";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -9,17 +10,16 @@ export default function Dashboard() {
     navigate("/login");
   };
 
-  return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <h1>Dashboard</h1>
-        <button onClick={handleLogout} className="logout-button">
-          Logout
-        </button>
-      </div>
-      <div className="dashboard-content">
-        <p>Welcome to your dashboard!</p>
-      </div>
+return (
+  <div className="dashboard-container">
+    <Sidebar />
+    
+    <div className="main-content">
+      <button onClick={handleLogout} className="logout-button">
+        Logout
+      </button>
+      <p>Welcome to your dashboard!</p>
     </div>
-  );
+  </div>
+);
 }
