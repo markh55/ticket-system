@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
@@ -11,6 +11,28 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch("/api/csrf/", {
+      credentials: "include",
+    });
+  }, []);
+
+  // Function to get CSRF token from cookies
+  const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -25,11 +47,15 @@ export default function Login() {
     setErrors({});
 
     try {
-      const response = await fetch("http://localhost:8000/api/login/", {
+      const csrftoken = getCookie('csrftoken');
+      
+      const response = await fetch("/login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRFToken": csrftoken,
         },
+        credentials: "include",
         body: JSON.stringify(formData),
       });
 
@@ -37,7 +63,7 @@ export default function Login() {
 
       if (response.ok) {
         localStorage.setItem("token", data.token);
-        navigate("/");
+        navigate("/dashboard");
       } else {
         setErrors(data);
       }
