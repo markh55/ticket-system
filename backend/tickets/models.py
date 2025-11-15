@@ -31,3 +31,17 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f"{self.subject} - {self.sender}"
+
+class Reply(models.Model):
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name='replies')
+    sender = models.EmailField()
+    body = models.TextField()
+    is_staff_reply = models.BooleanField(default=False)  # True if sent by your team, False if from customer
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+        verbose_name_plural = 'Replies'
+
+    def __str__(self):
+        return f"Reply to {self.ticket.subject} by {self.sender}"
