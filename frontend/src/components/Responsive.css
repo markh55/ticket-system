@@ -1,5 +1,5 @@
 /* ============================================
-   RESPONSIVE STYLES FOR ENTIRE PROJECT
+   MOBILE MENU COMPONENTS
    ============================================ */
 
 /* Mobile Menu Toggle Button */
@@ -65,30 +65,38 @@
 }
 
 /* ============================================
-   LARGE SCREENS (> 1400px)
+   MAIN CONTENT SCROLL
    ============================================ */
+.main-content {
+    height: calc(100vh - 100px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* LARGE SCREENS (> 1400px) */
 @media (min-width: 1400px) {
   .tile-large {
     min-width: 600px;
   }
 }
 
-/* ============================================
-   MEDIUM SCREENS - LAPTOPS (1200px - 1400px)
-   ============================================ */
+/* MEDIUM SCREENS - LAPTOPS (1200px - 1400px) */
 @media (max-width: 1400px) {
   .tile-medium {
-    flex: 0 0 350px;
+    flex: 0 0 300px;
   }
   
-  .tile-large {
-    min-width: 450px;
+  .tile-large,
+  .tile-medium {
+    height: 500px;
   }
 }
 
-/* ============================================
-   SMALL LAPTOPS & TABLETS (992px - 1200px)
-   ============================================ */
+/* SMALL LAPTOPS & TABLETS (992px - 1200px) */
 @media (max-width: 1200px) {
   .tiles-container:last-child {
     flex-direction: column !important;
@@ -103,9 +111,7 @@
   }
 }
 
-/* ============================================
-   TABLETS (768px - 992px)
-   ============================================ */
+/* TABLETS (768px - 992px) */
 @media (max-width: 992px) {
   .main-content {
     padding: 20px !important;
@@ -124,9 +130,7 @@
   }
 }
 
-/* ============================================
-   MOBILE LAYOUT (< 768px)
-   ============================================ */
+/* MOBILE LAYOUT (< 768px) */
 @media (max-width: 768px) {
   .mobile-menu-toggle {
     display: flex !important;
@@ -189,9 +193,7 @@
   }
 }
 
-/* ============================================
-   SMALL MOBILE (< 480px)
-   ============================================ */
+/* SMALL MOBILE (< 480px) */
 @media (max-width: 480px) {
   .main-content {
     padding: 70px 10px 10px 10px !important;
