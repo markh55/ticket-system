@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
-from emails.views import mailgun_webhook
 from users.views import LoginView
 from users.views import get_csrf_token
 
@@ -11,7 +10,6 @@ urlpatterns = [
     path('api/login/', LoginView.as_view(), name='login'),  # Move to /api/login/
     path('api/tickets/', include('tickets.urls')),  # Move to /api/tickets/
     path('api/emails/', include('emails.urls')),  # Move to /api/emails/
-    path('webhook/', mailgun_webhook, name='mailgun-webhook'),
     
     re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),  # React catches everything else
 ]
