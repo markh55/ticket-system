@@ -161,3 +161,22 @@ CORS_ALLOW_CREDENTIALS = True
 
 # Mailgun webhook signing key
 MAILGUN_WEBHOOK_SIGNING_KEY = os.getenv('MAILGUN_WEBHOOK_SIGNING_KEY', '')
+
+# Django REST framework configuration - enable TokenAuthentication by default
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    # Keep default permission open; protect specific views with IsAuthenticated as needed
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
+
+# Ensure CORS allows Authorization header (usually included by default)
+from corsheaders.defaults import default_headers
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'Authorization',
+]
