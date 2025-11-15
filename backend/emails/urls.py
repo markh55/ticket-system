@@ -4,9 +4,9 @@ from .views import EmailViewSet
 from .views import mailgun_webhook
 
 router = DefaultRouter()
-router.register(r'', EmailViewSet, basename='email')
+router.register(r'emails', EmailViewSet, basename='email')  # Changed from r'' to r'emails'
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('mailgun-webhook/', mailgun_webhook, name='mailgun-webhook'),
+    path('mailgun-webhook/', mailgun_webhook, name='mailgun-webhook'),  # Put webhook FIRST
+    path('', include(router.urls)),  # Router comes second
 ]
