@@ -1,0 +1,32 @@
+.tiles-container {
+    display: flex;
+    gap: 40px;
+    margin-top: 110px;  /* Below the topbar (20px top + 70px height + 20px gap) */
+    margin-left: 250px;  /* Match topbar left */
+    margin-right: 20px;  /* Match topbar right */
+    padding: 0 30px;  /* Match topbar padding */
+}
+
+.tile {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 28px;
+    padding: 30px;
+    flex: 1;
+    min-width: 400px;
+    height: 180px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.tile h3 {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.tile-count {
+    color: white;
+    font-size: 48px;
+    font-weight: bold;
+    margin: 0;
+}
