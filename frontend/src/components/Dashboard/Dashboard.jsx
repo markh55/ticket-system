@@ -16,11 +16,20 @@ export default function Dashboard() {
     <div className="dashboard-container">
       <Sidebar />
       <Topbar onLogout={handleLogout} />
-    <div className="tiles-container">
-      <Tiles title="Total" count={150} />
-      <Tiles title="In Progress" count={25} />
-      <Tiles title="Completed" count={50} />
-    </div>
+      
+      <div className="main-content">
+        <div className="tiles-container">
+          <Tiles title="Total" count={150} variant="small" />
+          <Tiles title="In Progress" count={25} variant="small" />
+          <Tiles title="Completed" count={50} variant="small" />
+        </div>
+
+        <div className="tiles-container">
+          <Tiles title="Graph" variant="large" />
+          <Tiles title="Recents" variant="medium" />
+        </div>
+      </div>
+
     </div>
   );
 }

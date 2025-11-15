@@ -1,11 +1,10 @@
 import "./Tiles.css";
 
-
-export default function Tiles({ title, count }) {
+export default function Tiles({ title, count, variant = "small" }) {
     return (
-        <div className="tile">
+        <div className={`tile tile-${variant}`}>
             <h3>{title}</h3>
-            <p className="tile-count">{count}</p>
+            {count && <p className="tile-count">{count}</p>}
         </div>
     );
 }
