@@ -5,8 +5,7 @@ export default function Sidebar() {
     <nav className="sidebar">
       <div className="sidebar-header">
         <div className="logo">
-          <span className="logo-icon">📊</span>
-          <h2>Direction</h2>
+          <h2>Code By Mark</h2>
         </div>
       </div>
 

@@ -1,24 +1,26 @@
 .topbar {
   position: fixed;
   top: 20px;
-  left: 280px; /* Adjust this based on your sidebar width + gap */
+  left: 280px;
   right: 20px;
   height: 70px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 30px;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 100;
 }
 
 .search-container {
   display: flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 10px 16px;
   gap: 10px;
@@ -27,12 +29,12 @@
 }
 
 .search-container:focus-within {
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.15);
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
 }
 
 .search-icon {
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.6);
   flex-shrink: 0;
 }
 
@@ -40,13 +42,13 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #1f2937;
+  color: #e2e8f0;
   font-size: 14px;
   width: 100%;
 }
 
 .search-input::placeholder {
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .logout-btn {

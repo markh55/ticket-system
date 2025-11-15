@@ -10,7 +10,7 @@ export default function Topbar({ onLogout }) {
         </svg>
         <input 
           type="text" 
-          placeholder="Search (Ctrl+/)" 
+          placeholder="Search..."
           className="search-input"
         />
       </div>
