@@ -1,0 +1,72 @@
+.topbar {
+  position: fixed;
+  top: 20px;
+  left: 280px; /* Adjust this based on your sidebar width + gap */
+  right: 20px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 10px 16px;
+  gap: 10px;
+  min-width: 300px;
+  transition: all 0.3s ease;
+}
+
+.search-container:focus-within {
+  background: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+.search-icon {
+  color: rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #1f2937;
+  font-size: 14px;
+  width: 100%;
+}
+
+.search-input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.logout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+}
+
+.logout-btn:active {
+  transform: translateY(0);
+}

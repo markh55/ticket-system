@@ -12,11 +12,11 @@ export default function Sidebar() {
 
       <div className="sidebar-nav">
         <div className="nav-item">
-          <span className="icon">🎟️</span>
+          <span className="icon">🎟️ </span>
           <span>Tickets</span>
         </div>
         <div className="nav-item">
-          <span className="icon">📅</span>
+          <span className="icon">📅 </span>
           <span>Calendar</span>
         </div>
       </div>
@@ -25,8 +25,7 @@ export default function Sidebar() {
         <div className="user-profile">
           <div className="avatar">👤</div>
           <div className="user-info">
-            <p className="welcome">Welcome back</p>
-            <p className="username">Mark Williamson</p>
+            <p className="username"></p>
           </div>
         </div>
       </div>
