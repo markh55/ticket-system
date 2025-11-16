@@ -23,3 +23,10 @@ export const getEmails = async (token) => {
   });
   return response.data;
 };
+
+export const getCurrentUser = async (token) => {
+  const response = await axios.get(`${API_URL}/api/user/`, {
+    headers: { Authorization: `Token ${token}` }
+  });
+  return response.data;
+};

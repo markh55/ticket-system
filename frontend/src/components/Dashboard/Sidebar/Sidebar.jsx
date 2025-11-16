@@ -1,11 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { getCurrentUser } from "../../../api";
 import "./Sidebar.css";
 
 export default function Sidebar({ className }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const userData = await getCurrentUser(token);
+          setUsername(userData.username);
+        } catch (error) {
+          console.error('Error fetching user:', error);
+        }
+      }
+    };
+    
+    fetchUser();
+  }, []);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -74,7 +92,7 @@ export default function Sidebar({ className }) {
           <div className="user-profile">
             <div className="avatar">👤</div>
             <div className="user-info">
-              <p className="username"></p>
+              <p className="username">{username || 'Loading...'}</p>
             </div>
           </div>
         </div>
