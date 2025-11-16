@@ -6,23 +6,47 @@ export default function EventModal({ isOpen, onClose, onSave, onDelete, selected
   const [date, setDate] = useState('');
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('10:00');
+  const [invitees, setInvitees] = useState([]);
+  const [emailInput, setEmailInput] = useState('');
 
   // Prefill form when editing or opening modal
   useEffect(() => {
     if (selectedEvent) {
       setTitle(selectedEvent.title || '');
       setDescription(selectedEvent.description || '');
-      setDate(selectedEvent.start.toISOString().slice(0, 10)); // YYYY-MM-DD
-      setStartTime(selectedEvent.start.toTimeString().slice(0, 5)); // HH:MM
+      setDate(selectedEvent.start.toISOString().slice(0, 10));
+      setStartTime(selectedEvent.start.toTimeString().slice(0, 5));
       setEndTime(selectedEvent.end.toTimeString().slice(0, 5));
+      setInvitees(selectedEvent.invitees || []);
     } else if (selectedDate) {
       setTitle('');
       setDescription('');
       setDate(selectedDate.toISOString().slice(0, 10));
       setStartTime('09:00');
       setEndTime('10:00');
+      setInvitees([]);
     }
+    setEmailInput('');
   }, [selectedEvent, selectedDate]);
+
+  const handleAddInvitee = () => {
+    const email = emailInput.trim();
+    if (email && email.includes('@') && !invitees.includes(email)) {
+      setInvitees([...invitees, email]);
+      setEmailInput('');
+    }
+  };
+
+  const handleRemoveInvitee = (emailToRemove) => {
+    setInvitees(invitees.filter(email => email !== emailToRemove));
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddInvitee();
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,7 +64,8 @@ export default function EventModal({ isOpen, onClose, onSave, onDelete, selected
       title,
       description,
       start,
-      end
+      end,
+      invitees
     });
 
     onClose();
@@ -111,6 +136,71 @@ export default function EventModal({ isOpen, onClose, onSave, onDelete, selected
               placeholder="Add event details..."
               rows="3"
             />
+          </div>
+
+          <div className="form-group">
+            <label>Invite People</label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                type="email"
+                value={emailInput}
+                onChange={e => setEmailInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Enter email address"
+                style={{ flex: 1 }}
+              />
+              <button 
+                type="button" 
+                onClick={handleAddInvitee}
+                style={{
+                  padding: '8px 16px',
+                  background: 'rgba(99, 102, 241, 0.8)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer'
+                }}
+              >
+                Add
+              </button>
+            </div>
+            
+            {invitees.length > 0 && (
+              <div style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {invitees.map((email, index) => (
+                  <div 
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '6px 12px',
+                      background: 'rgba(99, 102, 241, 0.2)',
+                      borderRadius: '20px',
+                      fontSize: '14px',
+                      color: '#e2e8f0'
+                    }}
+                  >
+                    <span>{email}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveInvitee(email)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#ef4444',
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        padding: '0',
+                        lineHeight: '1'
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="modal-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
