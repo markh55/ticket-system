@@ -60,6 +60,10 @@ export default function Dashboard() {
     navigate("/login");
   };
 
+  const handleTileClick = (filter) => {
+    navigate(`/tickets?filter=${filter}`);
+  };
+
   return (
     <div className="dashboard-container">
       <Sidebar />
@@ -70,17 +74,20 @@ export default function Dashboard() {
           <Tiles 
             title="Total" 
             count={loading ? "..." : stats.total} 
-            variant="small" 
+            variant="small"
+            onClick={() => handleTileClick('all')}
           />
           <Tiles 
             title="In Progress" 
             count={loading ? "..." : stats.in_progress} 
-            variant="small" 
+            variant="small"
+            onClick={() => handleTileClick('open')}
           />
           <Tiles 
             title="Completed" 
             count={loading ? "..." : stats.completed} 
-            variant="small" 
+            variant="small"
+            onClick={() => handleTileClick('closed')}
           />
         </div>
 
