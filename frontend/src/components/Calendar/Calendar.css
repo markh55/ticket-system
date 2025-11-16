@@ -1,0 +1,106 @@
+.calendar-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%);
+  overflow: hidden;
+}
+
+.calendar-content {
+  flex: 1;
+  margin-left: 320px;
+  padding: 40px;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.rbc-calendar {
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  height: calc(100vh - 80px);
+  color: #e2e8f0;
+}
+
+.rbc-header {
+  background: rgba(99, 102, 241, 0.2);
+  padding: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+  border: none;
+}
+
+.rbc-month-view {
+  background: transparent;
+  border: none;
+}
+
+.rbc-month-row {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.rbc-day-bg {
+  background: rgba(15, 23, 42, 0.5);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.rbc-off-range-bg {
+  background: rgba(15, 23, 42, 0.3);
+}
+
+.rbc-today {
+  background-color: rgba(99, 102, 241, 0.2);
+}
+
+.rbc-date-cell {
+  color: #e2e8f0;
+  padding: 8px;
+}
+
+.rbc-off-range {
+  color: #64748b;
+}
+
+.rbc-event {
+  background-color: rgba(99, 102, 241, 0.8);
+  border-radius: 4px;
+  border: none;
+}
+
+.rbc-event:hover {
+  background-color: rgba(99, 102, 241, 1);
+}
+
+.rbc-toolbar {
+  color: #e2e8f0;
+  margin-bottom: 20px;
+}
+
+.rbc-toolbar button {
+  background: rgba(99, 102, 241, 0.8);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rbc-toolbar button:hover {
+  background: rgba(99, 102, 241, 1);
+  transform: scale(1.05);
+}
+
+.rbc-toolbar button.rbc-active {
+  background: rgba(99, 102, 241, 1);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.rbc-toolbar-label {
+  color: #e2e8f0;
+  font-weight: 600;
+  font-size: 18px;
+}

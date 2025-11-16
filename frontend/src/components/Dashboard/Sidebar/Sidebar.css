@@ -17,13 +17,13 @@ html, body {
   width: 240px;
   height: calc(100vh - 40px);
   margin: 20px;
-  padding: 24px 16px;
+  padding: 14px;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
+  overflow: visible;
   position: fixed;
   left: 0;
   top: 0;
@@ -38,11 +38,11 @@ html, body {
 .sidebar-nav {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: visible;
   min-height: 0;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding-right: 4px; /* Add padding to compensate for transform */
+  padding-right: 4px;
 }
 
 .sidebar-nav::-webkit-scrollbar {
@@ -59,7 +59,7 @@ html, body {
   align-items: center;
   gap: 8px;
   white-space: nowrap;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .nav-item .icon {
@@ -72,8 +72,8 @@ html, body {
 }
 
 .nav-item:focus {
-  outline: 2px solid rgba(99, 102, 241, 0.6);
-  outline-offset: 2px;
+  background: rgba(99, 102, 241, 0.3);
+  outline: none;
 }
 
 .sidebar-footer {
