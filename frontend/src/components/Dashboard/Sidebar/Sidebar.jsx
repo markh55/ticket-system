@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 
 export default function Sidebar({ className }) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -12,7 +13,7 @@ export default function Sidebar({ className }) {
 
   const handleNavClick = (route) => {
     navigate(route);
-    setIsOpen(false); // Close sidebar on mobile after navigation
+    setIsOpen(false);
   };
 
   return (
@@ -38,7 +39,17 @@ export default function Sidebar({ className }) {
 
         <div className="sidebar-nav">
           <div 
-            className="nav-item"
+            className={`nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}
+            onClick={() => handleNavClick('/dashboard')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && handleNavClick('/dashboard')}
+          >
+            <span className="icon">📊 </span>
+            <span>Dashboard</span>
+          </div>
+          <div 
+            className={`nav-item ${location.pathname === '/tickets' ? 'active' : ''}`}
             onClick={() => handleNavClick('/tickets')}
             role="button"
             tabIndex={0}
@@ -48,7 +59,7 @@ export default function Sidebar({ className }) {
             <span>Tickets</span>
           </div>
           <div 
-            className="nav-item"
+            className={`nav-item ${location.pathname === '/calendar' ? 'active' : ''}`}
             onClick={() => handleNavClick('/calendar')}
             role="button"
             tabIndex={0}
