@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getCurrentUser } from "../../../api";
 import "./Sidebar.css";
+import { LayoutDashboard, Ticket, CalendarDays, Settings, NotebookPen } from "lucide-react";
 
 export default function Sidebar({ className }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -63,7 +64,7 @@ export default function Sidebar({ className }) {
             tabIndex={0}
             onKeyDown={(e) => e.key === 'Enter' && handleNavClick('/dashboard')}
           >
-            <span className="icon">📊 </span>
+            <span className="icon"><LayoutDashboard size={20} /></span>
             <span>Dashboard</span>
           </div>
           <div 
@@ -73,7 +74,7 @@ export default function Sidebar({ className }) {
             tabIndex={0}
             onKeyDown={(e) => e.key === 'Enter' && handleNavClick('/tickets')}
           >
-            <span className="icon">🎟️ </span>
+            <span className="icon"><Ticket size={20} /></span>
             <span>Tickets</span>
           </div>
           <div 
@@ -83,8 +84,30 @@ export default function Sidebar({ className }) {
             tabIndex={0}
             onKeyDown={(e) => e.key === 'Enter' && handleNavClick('/calendar')}
           >
-            <span className="icon">📅 </span>
+            <span className="icon"><CalendarDays size={20} /></span>
             <span>Calendar</span>
+          </div>
+          <div
+            className={`nav-item ${location.pathname === '/notes' ? 'active' : ''}`}
+            onClick={() => handleNavClick('/notes')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && handleNavClick('/notes')}
+          >
+            <span className="icon"><NotebookPen size={20} /></span>
+            <span>Notes</span>
+          </div>
+
+          <div
+            className={`nav-item ${location.pathname === '/settings' ? 'active' : ''}`}
+            onClick={() => handleNavClick('/settings')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && handleNavClick('/settings')}
+            style={{ marginTop: 'auto' }}
+          >
+            <span className="icon"><Settings size={20} /></span>
+            <span>Settings</span>
           </div>
         </div>
 

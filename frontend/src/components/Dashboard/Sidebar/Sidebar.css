@@ -43,6 +43,8 @@ html, body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding-right: 4px;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-nav::-webkit-scrollbar {
