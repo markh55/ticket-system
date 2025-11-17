@@ -12,15 +12,35 @@
   padding: 2rem;
 }
 
+/* NEW: Flex wrapper for ticket list and filter sidebar */
+.content-wrapper {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
 /* Ticket list styles */
 .ticket-list {
-  width: 100%;
+  flex: 1;
+  min-width: 0; /* Prevents flex item from overflowing */
 }
 
 .ticket-list h2 {
   color: #fff;
   margin-bottom: 1.5rem;
   font-size: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ticket-count {
+  background: #2d3561;
+  color: #94a3b8;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .ticket-list ul {
@@ -36,11 +56,13 @@
   margin-bottom: 1rem;
   border: 1px solid #2d3561;
   transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
 }
 
 .ticket-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-color: #4c6ef5;
 }
 
 .ticket-item h3 {
@@ -55,10 +77,21 @@
   font-size: 0.95rem;
 }
 
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .content-wrapper {
+    gap: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
     padding: 1rem;
+  }
+  
+  .content-wrapper {
+    flex-direction: column-reverse; /* Filters on top for mobile */
   }
   
   .ticket-list h2 {

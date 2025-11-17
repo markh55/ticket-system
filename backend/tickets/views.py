@@ -1,12 +1,15 @@
 from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from .models import Ticket, Reply
 from .serializers import TicketSerializer
-from rest_framework.permissions import IsAuthenticated
 from django.db.models import Count
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class TicketViewSet(viewsets.ModelViewSet):
     queryset = Ticket.objects.all()
@@ -85,3 +88,11 @@ class TicketViewSet(viewsets.ModelViewSet):
         activity.sort(key=lambda x: x['created_at'], reverse=True)
         
         return Response(activity[:10])
+
+# NEW: Users list endpoint
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def users_list(request):
+    users = User.objects.all()
+    user_data = [{'id': user.id, 'username': user.username, 'email': user.email} for user in users]
+    return Response(user_data)

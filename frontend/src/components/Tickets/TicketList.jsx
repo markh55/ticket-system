@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../Dashboard/Sidebar/Sidebar';
 import Topbar from '../Dashboard/Topbar/Topbar';
+import FilterSidebar from './FilterSidebar'; // NEW: Import FilterSidebar
 import './TicketList.css';
 
 const TicketList = () => {
@@ -46,18 +47,27 @@ const TicketList = () => {
       <Topbar onLogout={handleLogout} />
       
       <div className="main-content">
-        <div className="ticket-list">
-          <ul>
-            {tickets.map(ticket => (
-              <li key={ticket.id} className="ticket-item">
-                <h3>{ticket.subject}</h3>
-                <p>From: {ticket.sender}</p>
-                <p>Status: {ticket.status} • Priority: {ticket.priority}</p>
-                <p>Assigned to: {ticket.assigned_to ? ticket.assigned_to.username : 'Unassigned'}</p>
-                <p>Created: {new Date(ticket.created_at).toLocaleString()}</p>
-              </li>
-            ))}
-          </ul>
+        {/* NEW: Wrapper for flex layout */}
+        <div className="content-wrapper">
+          
+          {/* Existing ticket list */}
+          <div className="ticket-list">
+            <h2>New tickets <span className="ticket-count">{tickets.length}</span></h2>
+            <ul>
+              {tickets.map(ticket => (
+                <li key={ticket.id} className="ticket-item">
+                  <h3>{ticket.subject}</h3>
+                  <p>From: {ticket.sender}</p>
+                  <p>Status: {ticket.status} • Priority: {ticket.priority}</p>
+                  <p>Assigned to: {ticket.assigned_to ? ticket.assigned_to.username : 'Unassigned'}</p>
+                  <p>Created: {new Date(ticket.created_at).toLocaleString()}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* NEW: Filter sidebar on the right */}
+          <FilterSidebar />
         </div>
       </div>
     </div>
