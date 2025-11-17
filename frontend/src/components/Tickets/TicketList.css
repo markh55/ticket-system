@@ -1,0 +1,71 @@
+/* Layout container */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background: #0a0e27;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 250px;
+  margin-top: 70px;
+  padding: 2rem;
+}
+
+/* Ticket list styles */
+.ticket-list {
+  width: 100%;
+}
+
+.ticket-list h2 {
+  color: #fff;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+.ticket-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ticket-item {
+  background: #1a1f3a;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #2d3561;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ticket-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.ticket-item h3 {
+  color: #fff;
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+}
+
+.ticket-item p {
+  color: #a0aec0;
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+  
+  .ticket-list h2 {
+    font-size: 1.5rem;
+  }
+  
+  .ticket-item {
+    padding: 1rem;
+  }
+}
