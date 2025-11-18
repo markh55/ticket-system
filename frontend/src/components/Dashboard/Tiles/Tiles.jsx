@@ -11,7 +11,7 @@ export default function Tiles({ title, count, variant = "small", onClick }) {
             style={onClick ? { cursor: 'pointer' } : {}}
         >
             <h3>{title}</h3>
-            {count && <p className="tile-count">{count}</p>}
+            {count !== undefined && <p className="tile-count">{count}</p>}
         </div>
     );
 }
