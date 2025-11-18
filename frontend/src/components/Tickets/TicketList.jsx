@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Sidebar from '../Dashboard/Sidebar/Sidebar';
 import Topbar from '../Dashboard/Topbar/Topbar';
 import FilterSidebar from './FilterSidebar';
@@ -16,6 +16,7 @@ const TicketList = () => {
     assignee: []
   });
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -37,6 +38,39 @@ const TicketList = () => {
         console.error('Error fetching tickets:', error);
       });
   }, []);
+
+  // Apply URL filter on load
+  useEffect(() => {
+    const filterParam = searchParams.get('filter');
+    if (filterParam && tickets.length > 0) {
+      const newFilters = {
+        status: [],
+        priority: [],
+        assignee: []
+      };
+
+      switch (filterParam) {
+        case 'open':
+          newFilters.status = ['open'];
+          break;
+        case 'closed':
+          newFilters.status = ['closed'];
+          break;
+        case 'unassigned':
+          newFilters.assignee = ['unassigned'];
+          break;
+        case 'high_priority':
+          newFilters.priority = ['high'];
+          break;
+        case 'all':
+        default:
+          // Show all tickets
+          break;
+      }
+
+      setFilters(newFilters);
+    }
+  }, [searchParams, tickets]);
 
   // Apply filters whenever tickets or filters change
   useEffect(() => {

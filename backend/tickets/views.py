@@ -21,11 +21,15 @@ class TicketViewSet(viewsets.ModelViewSet):
         total = Ticket.objects.count()
         in_progress = Ticket.objects.filter(status='open').count()
         completed = Ticket.objects.filter(status='closed').count()
+        unassigned = Ticket.objects.filter(assigned_to__isnull=True).count()
+        high_priority = Ticket.objects.filter(priority='high').count()
         
         return Response({
             'total': total,
             'in_progress': in_progress,
-            'completed': completed
+            'completed': completed,
+            'unassigned': unassigned,
+            'high_priority': high_priority
         })
     
     @action(detail=False, methods=['get'])

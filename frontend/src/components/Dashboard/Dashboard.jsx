@@ -12,7 +12,9 @@ export default function Dashboard() {
   const [stats, setStats] = useState({
     total: 0,
     in_progress: 0,
-    completed: 0
+    completed: 0,
+    unassigned: 0,
+    high_priority: 0
   });
   const [chartData, setChartData] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
@@ -88,6 +90,18 @@ export default function Dashboard() {
             count={loading ? "..." : stats.completed} 
             variant="small"
             onClick={() => handleTileClick('closed')}
+          />
+          <Tiles 
+            title="Unassigned" 
+            count={loading ? "..." : stats.unassigned} 
+            variant="small"
+            onClick={() => handleTileClick('unassigned')}
+          />
+          <Tiles 
+            title="High Priority" 
+            count={loading ? "..." : stats.high_priority} 
+            variant="small"
+            onClick={() => handleTileClick('high_priority')}
           />
         </div>
 
