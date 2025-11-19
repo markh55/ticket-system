@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Ticket
 from django.contrib.auth import get_user_model
+from .models import Ticket, Reply
 
 User = get_user_model()
 
@@ -19,3 +20,8 @@ class TicketSerializer(serializers.ModelSerializer):
                 'email': obj.assigned_to.email
             }
         return None
+    
+class ReplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reply
+        fields = '__all__'

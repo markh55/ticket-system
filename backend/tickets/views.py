@@ -3,7 +3,7 @@ from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Ticket, Reply
-from .serializers import TicketSerializer
+from .serializers import TicketSerializer, ReplySerializer
 from django.db.models import Count
 from django.utils import timezone
 from datetime import timedelta
@@ -92,6 +92,18 @@ class TicketViewSet(viewsets.ModelViewSet):
         activity.sort(key=lambda x: x['created_at'], reverse=True)
         
         return Response(activity[:10])
+
+class ReplyViewSet(viewsets.ModelViewSet):
+    serializer_class = ReplySerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        ticket_id = self.kwargs.get('ticket_pk')
+        return Reply.objects.filter(ticket_id=ticket_id)
+    
+    def perform_create(self, serializer):
+        ticket_id = self.kwargs.get('ticket_pk')
+        serializer.save(ticket_id=ticket_id)
 
 # NEW: Users list endpoint
 @api_view(['GET'])

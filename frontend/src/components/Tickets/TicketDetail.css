@@ -1,72 +1,177 @@
-.ticket-header {
+/* Ticket detail page wrapper */
+.ticket-detail-page {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background: #0a0e27;
+  overflow: hidden;
+}
+
+/* Main container - the white container for tickets */
+.ticket-detail-page .main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 275px;
+  margin-top: 120px;
+  margin-bottom: 30px;
+  margin-right: 20px;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  max-height: calc(100vh - 150px);
+  box-sizing: border-box;
+}
+
+/* Ticket header */
+.ticket-detail-page .ticket-header {
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.ticket-detail-page .ticket-header h1 {
+  font-size: 24px;
+  margin: 0;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.ticket-detail-page .ticket-actions {
+  display: flex;
+  gap: 10px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.ticket-detail-page .ticket-actions button {
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  transition: all 0.2s;
+}
+
+.ticket-detail-page .ticket-actions button:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* Conversation thread */
+.ticket-detail-page .conversation-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   margin-bottom: 20px;
 }
 
-.ticket-header h1 {
-  color: #fff;
-  margin-bottom: 10px;
-}
-
-.ticket-meta {
-  color: #94a3b8;
-  margin-bottom: 10px;
-}
-
-.ticket-meta strong {
-  color: #e2e8f0;
-}
-
-.ticket-body {
-  margin-top: 20px;
-  padding: 20px;
-  background: #f5f5f5;
+/* Message cards */
+.ticket-detail-page .message-card {
+  background: #f9fafb;
   border-radius: 8px;
-  color: #000;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
 }
 
-.ticket-actions {
-  margin-top: 30px;
+.ticket-detail-page .message-card.customer-message {
+  border-left: 3px solid #3b82f6;
 }
 
-.ticket-actions button {
-  margin-right: 10px;
-  padding: 10px 20px;
-  background: #667eea;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.ticket-detail-page .message-card.staff-message {
+  border-left: 3px solid #10b981;
+  background: #f0fdf4;
 }
 
-.ticket-actions button:hover {
-  background: #5568d3;
+.ticket-detail-page .message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e5e5;
 }
 
-.reply-box {
+.ticket-detail-page .message-header strong {
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.ticket-detail-page .message-time {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.ticket-detail-page .message-body {
+  color: #374151;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.ticket-detail-page .message-body p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* Reply box */
+.ticket-detail-page .reply-box {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 20px;
   margin-top: 20px;
+  border: 1px solid #e5e7eb;
 }
 
-.reply-box textarea {
+.ticket-detail-page .reply-box textarea {
   width: 100%;
-  min-height: 150px;
-  padding: 10px;
-  background: #1a1f3a;
-  border: 1px solid #2d3561;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
   border-radius: 6px;
-  color: #e2e8f0;
+  font-size: 14px;
+  font-family: inherit;
   resize: vertical;
+  margin-bottom: 12px;
 }
 
-.reply-box button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  background: #667eea;
-  color: #fff;
-  border: none;
+.ticket-detail-page .reply-box textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.ticket-detail-page .reply-box button {
+  padding: 8px 20px;
   border-radius: 6px;
+  font-size: 14px;
   cursor: pointer;
+  margin-right: 10px;
+  transition: all 0.2s;
 }
 
-.reply-box button:hover {
-  background: #5568d3;
+.ticket-detail-page .reply-box button:first-of-type {
+  background: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.ticket-detail-page .reply-box button:first-of-type:hover {
+  background: #2563eb;
+}
+
+.ticket-detail-page .reply-box button:last-of-type {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.ticket-detail-page .reply-box button:last-of-type:hover {
+  background: #f9fafb;
 }
