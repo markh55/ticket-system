@@ -1,0 +1,72 @@
+.ticket-header {
+  margin-bottom: 20px;
+}
+
+.ticket-header h1 {
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.ticket-meta {
+  color: #94a3b8;
+  margin-bottom: 10px;
+}
+
+.ticket-meta strong {
+  color: #e2e8f0;
+}
+
+.ticket-body {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  color: #000;
+}
+
+.ticket-actions {
+  margin-top: 30px;
+}
+
+.ticket-actions button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  background: #667eea;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.ticket-actions button:hover {
+  background: #5568d3;
+}
+
+.reply-box {
+  margin-top: 20px;
+}
+
+.reply-box textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 10px;
+  background: #1a1f3a;
+  border: 1px solid #2d3561;
+  border-radius: 6px;
+  color: #e2e8f0;
+  resize: vertical;
+}
+
+.reply-box button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #667eea;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reply-box button:hover {
+  background: #5568d3;
+}

@@ -4,6 +4,7 @@ import Login from './components/Login/Login';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
 import CalendarComponent from './components/Calendar/Calendar';
 import TicketList from './components/Tickets/TicketList';
+import TicketDetail from './components/Tickets/TicketDetail';
 import './components/Responsive.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/calendar" element={<CalendarComponent />} />
         <Route path="/tickets" element={<TicketList />} />
+        <Route path="/ticketdetail/:id" element={<TicketDetail />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </div>

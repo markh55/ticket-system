@@ -231,7 +231,7 @@ const TicketList = () => {
   };
 
   const handleRowClick = (ticketId) => {
-    navigate(`/tickets/${ticketId}`);
+    navigate(`/ticketdetail/${ticketId}`);
   };
 
   const handleLogout = () => {
