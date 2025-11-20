@@ -87,16 +87,6 @@ export default function Sidebar({ className }) {
             <span className="icon"><CalendarDays size={20} /></span>
             <span>Calendar</span>
           </div>
-          <div
-            className={`nav-item ${location.pathname === '/notes' ? 'active' : ''}`}
-            onClick={() => handleNavClick('/notes')}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && handleNavClick('/notes')}
-          >
-            <span className="icon"><NotebookPen size={20} /></span>
-            <span>Notes</span>
-          </div>
 
           <div
             className={`nav-item ${location.pathname === '/settings' ? 'active' : ''}`}

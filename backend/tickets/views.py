@@ -67,6 +67,7 @@ class TicketViewSet(viewsets.ModelViewSet):
             activity.append({
                 'type': 'ticket',
                 'id': ticket.id,
+                'ticket_id': ticket.id,  # Added this for consistency
                 'subject': ticket.subject,
                 'sender': ticket.sender,
                 'status': ticket.status,
@@ -78,6 +79,7 @@ class TicketViewSet(viewsets.ModelViewSet):
             activity.append({
                 'type': 'reply',
                 'id': reply.id,
+                'ticket_id': reply.ticket.id,  # FIXED: Added ticket_id
                 'ticket_subject': reply.ticket.subject,
                 'sender': reply.sender,
                 'is_staff_reply': reply.is_staff_reply,
