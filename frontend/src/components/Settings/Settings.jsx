@@ -35,6 +35,45 @@ const Settings = () => {
     navigate('/login');
   };
 
+  const handlePasswordChange = (e) => {
+    e.preventDefault();
+    
+    if (newPassword !== confirmPassword) {
+      alert('New passwords do not match');
+      return;
+    }
+    
+    const token = localStorage.getItem('token');
+    
+    fetch('http://localhost:8000/api/change-password/', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        old_password: currentPassword,
+        new_password: newPassword,
+      })
+    })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(err => { throw err; });
+        }
+        return response.json();
+      })
+      .then(data => {
+        alert('Password changed successfully');
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+      })
+      .catch(error => {
+        console.error('Error changing password:', error);
+        alert(error.old_password || error.new_password || 'Failed to change password');
+      });
+  };
+
   return (
     <div className="settings-page">
       <Sidebar />
@@ -56,7 +95,7 @@ const Settings = () => {
 
         <div className="settings-section">
           <h2>Change Password</h2>
-          <form className="password-form">
+          <form className="password-form" onSubmit={handlePasswordChange}>
             <div className="form-group">
               <label>Current Password</label>
               <input 
