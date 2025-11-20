@@ -29,7 +29,11 @@ def current_user(request):
     return Response({
         'id': request.user.id,
         'username': request.user.username,
-        'email': request.user.email
+        'email': request.user.email,
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'is_superuser': request.user.is_superuser,
+        'is_staff': request.user.is_staff
     })
 
 @require_http_methods(["GET"])
