@@ -7,6 +7,9 @@ import './Settings.css';
 const Settings = () => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -50,6 +53,40 @@ const Settings = () => {
         ) : (
           <p>Loading user information...</p>
         )}
+
+        <div className="settings-section">
+          <h2>Change Password</h2>
+          <form className="password-form">
+            <div className="form-group">
+              <label>Current Password</label>
+              <input 
+                type="password" 
+                placeholder="Enter current password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>New Password</label>
+              <input 
+                type="password" 
+                placeholder="Enter new password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>Confirm New Password</label>
+              <input 
+                type="password" 
+                placeholder="Confirm new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
+            <button type="submit">Update Password</button>
+          </form>
+        </div>
       </div>
     </div>
   );
