@@ -21,6 +21,14 @@
   border-radius: 8px;
   padding: 12px;
   border-left: 3px solid #8884d8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.activity-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .activity-item.reply {
@@ -92,4 +100,23 @@
   color: #888;
   font-size: 12px;
   margin-top: 8px;
+}
+
+/* Scrollbar styling */
+.recents-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.recents-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.recents-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.recents-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }

@@ -34,9 +34,24 @@ class Ticket(models.Model):
 
 class Reply(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name='replies')
+    parent_reply = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
     sender = models.EmailField()
     body = models.TextField()
-    is_staff_reply = models.BooleanField(default=False)  # True if sent by your team, False if from customer
+    is_staff_reply = models.BooleanField(default=False)
+    is_internal = models.BooleanField(default=False)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='created_replies'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -34,7 +34,6 @@ class TicketViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def chart_data(self, request):
-        # Get ticket counts by status for the last 7 days
         today = timezone.now().date()
         days_data = []
         
@@ -50,7 +49,7 @@ class TicketViewSet(viewsets.ModelViewSet):
             ).count()
             
             days_data.append({
-                'date': date.strftime('%a'),  # Mon, Tue, etc.
+                'date': date.strftime('%a'),
                 'open': open_count,
                 'closed': closed_count
             })
@@ -59,10 +58,7 @@ class TicketViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def recent_activity(self, request):
-        # Get last 5 tickets
         recent_tickets = Ticket.objects.order_by('-created_at')[:5]
-        
-        # Get last 5 replies
         recent_replies = Reply.objects.select_related('ticket').order_by('-created_at')[:5]
         
         activity = []
@@ -88,7 +84,6 @@ class TicketViewSet(viewsets.ModelViewSet):
                 'created_at': reply.created_at
             })
         
-        # Sort by created_at and return top 10
         activity.sort(key=lambda x: x['created_at'], reverse=True)
         
         return Response(activity[:10])
@@ -99,13 +94,64 @@ class ReplyViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         ticket_id = self.kwargs.get('ticket_pk')
-        return Reply.objects.filter(ticket_id=ticket_id)
+        return Reply.objects.filter(ticket_id=ticket_id, parent_reply__isnull=True)
     
     def perform_create(self, serializer):
         ticket_id = self.kwargs.get('ticket_pk')
-        serializer.save(ticket_id=ticket_id)
+        user = self.request.user
+        sender_email = user.email if user.email else f"{user.username}@example.com"
+        
+        serializer.save(
+            ticket_id=ticket_id,
+            created_by=user,
+            sender=sender_email
+        )
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
+        if instance.created_by != request.user:
+            return Response(
+                {'error': 'You can only delete notes you created.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    @action(detail=True, methods=['post'])
+    def add_comment(self, request, ticket_pk=None, pk=None):
+        parent_reply = self.get_object()
+        
+        if not parent_reply.is_internal:
+            return Response(
+                {'error': 'Can only comment on internal notes.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        user = request.user
+        sender_email = user.email if user.email else f"{user.username}@example.com"
+        body = request.data.get('body', '')
+        
+        if not body:
+            return Response(
+                {'error': 'Comment body is required.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        comment = Reply.objects.create(
+            ticket_id=ticket_pk,
+            parent_reply=parent_reply,
+            body=body,
+            is_staff_reply=True,
+            is_internal=True,
+            created_by=user,
+            sender=sender_email
+        )
+        
+        serializer = self.get_serializer(comment)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-# NEW: Users list endpoint
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def users_list(request):

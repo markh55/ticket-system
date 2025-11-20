@@ -39,6 +39,7 @@
   margin: 0;
   color: #1f2937;
   font-weight: 600;
+  text-align: left;
 }
 
 .ticket-detail-page .ticket-actions {
@@ -46,10 +47,11 @@
   gap: 10px;
   padding-top: 15px;
   border-top: 1px solid #e5e5e5;
+  margin-top: 20px;
 }
 
 .ticket-detail-page .ticket-actions button {
-  padding: 8px 16px;
+  padding: 10px 18px;
   background: white;
   border: 1px solid #d1d5db;
   border-radius: 6px;
@@ -57,6 +59,7 @@
   font-size: 14px;
   color: #374151;
   transition: all 0.2s;
+  font-weight: 500;
 }
 
 .ticket-detail-page .ticket-actions button:hover {
@@ -78,6 +81,11 @@
   border-radius: 8px;
   padding: 20px;
   border: 1px solid #e5e7eb;
+  transition: box-shadow 0.2s;
+}
+
+.ticket-detail-page .message-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .ticket-detail-page .message-card.customer-message {
@@ -89,13 +97,20 @@
   background: #f0fdf4;
 }
 
+.ticket-detail-page .message-card.internal-note {
+  background-color: #fffbeb;
+  border-left: 4px solid #fbbf24;
+  border: 1px solid #fde68a;
+}
+
 .ticket-detail-page .message-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 10px;
   margin-bottom: 12px;
   padding-bottom: 10px;
   border-bottom: 1px solid #e5e5e5;
+  flex-wrap: wrap;
 }
 
 .ticket-detail-page .message-header strong {
@@ -104,20 +119,71 @@
   font-weight: 600;
 }
 
+.ticket-detail-page .note-badge {
+  background-color: #fbbf24;
+  color: #78350f;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .ticket-detail-page .message-time {
   font-size: 12px;
-  color: #6b7280;
+  color: #9ca3af;
+  margin-left: auto;
+}
+
+.ticket-detail-page .delete-note-btn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.ticket-detail-page .delete-note-btn:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}
+
+.ticket-detail-page .reply-to-note-btn {
+  background-color: #8b5cf6;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+  margin-left: 8px;
+}
+
+.ticket-detail-page .reply-to-note-btn:hover {
+  background-color: #7c3aed;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
 }
 
 .ticket-detail-page .message-body {
   color: #374151;
   line-height: 1.6;
   font-size: 14px;
+  text-align: left;
 }
 
 .ticket-detail-page .message-body p {
   margin: 0;
   white-space: pre-wrap;
+  text-align: left;
 }
 
 /* Reply box */
@@ -127,6 +193,14 @@
   padding: 20px;
   margin-top: 20px;
   border: 1px solid #e5e7eb;
+}
+
+.ticket-detail-page .inline-reply-box {
+  margin-top: 12px;
+  margin-bottom: 0;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-left: 4px solid #fbbf24;
 }
 
 .ticket-detail-page .reply-box textarea {
@@ -139,6 +213,8 @@
   font-family: inherit;
   resize: vertical;
   margin-bottom: 12px;
+  box-sizing: border-box;
+  text-align: left;
 }
 
 .ticket-detail-page .reply-box textarea:focus {
@@ -148,9 +224,10 @@
 }
 
 .ticket-detail-page .reply-box button {
-  padding: 8px 20px;
+  padding: 10px 24px;
   border-radius: 6px;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   margin-right: 10px;
   transition: all 0.2s;
@@ -164,6 +241,8 @@
 
 .ticket-detail-page .reply-box button:first-of-type:hover {
   background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
 }
 
 .ticket-detail-page .reply-box button:last-of-type {

@@ -1,9 +1,15 @@
 import "./Recents.css";
 
-export default function Recents({ activities }) {
+export default function Recents({ activities, onActivityClick }) {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString();
+  };
+
+  const handleClick = (activity) => {
+    if (onActivityClick && activity.ticket_id) {
+      onActivityClick(activity.ticket_id);
+    }
   };
 
   return (
@@ -12,7 +18,12 @@ export default function Recents({ activities }) {
       {activities && activities.length > 0 ? (
         <div className="activity-list">
           {activities.map((activity, index) => (
-            <div key={index} className={`activity-item ${activity.type}`}>
+            <div 
+              key={index} 
+              className={`activity-item ${activity.type}`}
+              onClick={() => handleClick(activity)}
+              style={{ cursor: 'pointer' }}
+            >
               {activity.type === 'ticket' ? (
                 <>
                   <div className="activity-type">

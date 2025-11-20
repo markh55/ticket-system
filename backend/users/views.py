@@ -27,6 +27,7 @@ class LoginView(APIView):
 @permission_classes([IsAuthenticated])
 def current_user(request):
     return Response({
+        'id': request.user.id,
         'username': request.user.username,
         'email': request.user.email
     })
@@ -35,7 +36,6 @@ def current_user(request):
 def get_csrf_token(request):
     return JsonResponse({'detail': 'CSRF cookie set'})
 
-# NEW: Users list endpoint
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def users_list(request):

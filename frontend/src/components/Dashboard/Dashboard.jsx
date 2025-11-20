@@ -66,6 +66,10 @@ export default function Dashboard() {
     navigate(`/tickets?filter=${filter}`);
   };
 
+  const handleActivityClick = (ticketId) => {
+    navigate(`/tickets/${ticketId}`);
+  };
+
   return (
     <div className="dashboard-container">
       <Sidebar />
@@ -110,7 +114,10 @@ export default function Dashboard() {
             <Graph data={chartData} />
           </div>
           <div className="tile tile-medium">
-            <Recents activities={recentActivity} />
+            <Recents 
+              activities={recentActivity} 
+              onActivityClick={handleActivityClick}
+            />
           </div>
         </div>
       </div>
