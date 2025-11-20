@@ -61,3 +61,24 @@ def change_password(request):
     user.save()
     
     return Response({'message': 'Password changed successfully'}, status=status.HTTP_200_OK)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_user_profile(request):
+    user = request.user
+    
+    # Update user fields
+    user.email = request.data.get('email', user.email)
+    user.first_name = request.data.get('first_name', user.first_name)
+    user.last_name = request.data.get('last_name', user.last_name)
+    
+    user.save()
+    
+    # Return updated user data
+    return Response({
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'is_superuser': user.is_superuser
+    })

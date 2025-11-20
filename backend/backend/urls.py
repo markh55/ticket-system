@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
-from users.views import LoginView, current_user, users_list, change_password
+from users.views import LoginView, current_user, users_list, change_password, update_user_profile
 from users.views import get_csrf_token
 
 urlpatterns = [
@@ -11,6 +11,7 @@ urlpatterns = [
     path('api/user/', current_user, name='current_user'), 
     path('api/users/', users_list, name='users_list'), # to show user info in frontend sidebar
     path('api/change-password/', change_password, name='change_password'),
+    path('api/user/update/', update_user_profile, name='update_profile'),
     path('api/tickets/', include('tickets.urls')),
     path('api/emails/', include('emails.urls')),
 
