@@ -6,6 +6,7 @@ import CalendarComponent from './components/Calendar/Calendar';
 import TicketList from './components/Tickets/TicketList';
 import TicketDetail from './components/Tickets/TicketDetail';
 import Settings from './components/Settings/Settings';
+import Admin from './components/Admin/Admin';
 import './components/Responsive.css';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/tickets" element={<TicketList />} />
         <Route path="/ticketdetail/:id" element={<TicketDetail />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </div>
