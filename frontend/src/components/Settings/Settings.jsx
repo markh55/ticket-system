@@ -13,6 +13,33 @@ const Settings = () => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [signature, setSignature] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePicturePreview, setProfilePicturePreview] = useState(null);
+  
+  // Notification preferences
+  const [emailNotifications, setEmailNotifications] = useState({
+    newTicket: true,
+    ticketUpdate: true,
+    ticketClosed: false
+  });
+  const [inAppNotifications, setInAppNotifications] = useState({
+    newTicket: true,
+    ticketUpdate: true,
+    ticketClosed: true
+  });
+
+  // Working hours
+  const [workingHours, setWorkingHours] = useState({
+    monday: { enabled: true, start: "09:00", end: "17:00" },
+    tuesday: { enabled: true, start: "09:00", end: "17:00" },
+    wednesday: { enabled: true, start: "09:00", end: "17:00" },
+    thursday: { enabled: true, start: "09:00", end: "17:00" },
+    friday: { enabled: true, start: "09:00", end: "17:00" },
+    saturday: { enabled: false, start: "09:00", end: "17:00" },
+    sunday: { enabled: false, start: "09:00", end: "17:00" }
+  });
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -75,6 +102,7 @@ const Settings = () => {
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
+        setShowPasswordModal(false);
       })
       .catch((error) => {
         console.error("Error changing password:", error);
@@ -121,104 +149,304 @@ const Settings = () => {
       });
   };
 
+  const handleProfilePictureChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePicture(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicturePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const closeModal = () => {
+    setShowPasswordModal(false);
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+  };
+
   return (
     <div className="settings-page">
       <Sidebar />
       <Topbar onLogout={handleLogout} />
 
       <div className="main-content">
-        <h1>Settings</h1>
-        {currentUser ? (
-          <div className="user-info">
-            <p>
-              <strong>Username:</strong> {currentUser.username}
-            </p>
-            <p>
-              <strong>Email:</strong> {currentUser.email}
-            </p>
-            <p>
-              <strong>First Name:</strong> {currentUser.first_name}
-            </p>
-            <p>
-              <strong>Last Name:</strong> {currentUser.last_name}
-            </p>
-            <p>
-              <strong>Is Superuser:</strong>{" "}
-              {currentUser.is_superuser ? "Yes" : "No"}
-            </p>
+        <div className="settings-container">
+          <div className="account-details-card">
+            <div className="profile-picture-section">
+              <div className="profile-picture-placeholder">
+                {profilePicturePreview ? (
+                  <img src={profilePicturePreview} alt="Profile" style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                ) : (
+                  <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+                    <circle cx="60" cy="60" r="60" fill="#e5e7eb"/>
+                    <path d="M60 60c11.598 0 21-9.402 21-21s-9.402-21-21-21-21 9.402-21 21 9.402 21 21 21zm0 10.5c-14 0-42 7.028-42 21v10.5h84v-10.5c0-13.972-28-21-42-21z" fill="#9ca3af"/>
+                  </svg>
+                )}
+              </div>
+              <input
+                type="file"
+                id="profile-picture-upload"
+                accept="image/*"
+                onChange={handleProfilePictureChange}
+                style={{ display: 'none' }}
+              />
+              <label htmlFor="profile-picture-upload" className="upload-photo-btn">
+                Upload Photo
+              </label>
+            </div>
+            
+            <div className="account-details-content">
+              <h2>Account Details</h2>
+              {currentUser ? (
+                <>
+                  <div className="detail-item">
+                    <label>Username</label>
+                    <p>{currentUser.username}</p>
+                  </div>
+                  <div className="detail-item">
+                    <label>Email</label>
+                    <p>{currentUser.email}</p>
+                  </div>
+                  <div className="detail-item">
+                    <label>Account Status</label>
+                    <span className="status-badge">Active</span>
+                  </div>
+                  <button 
+                    className="change-password-link" 
+                    onClick={() => setShowPasswordModal(true)}
+                  >
+                    Change Password
+                  </button>
+                </>
+              ) : (
+                <p>Loading...</p>
+              )}
+            </div>
           </div>
-        ) : (
-          <p>Loading user information...</p>
-        )}
 
-        <div className="settings-section">
-          <h2>Change Password</h2>
-          <form className="password-form" onSubmit={handlePasswordChange}>
-            <div className="form-group">
-              <label>Current Password</label>
-              <input
-                type="password"
-                placeholder="Enter current password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-              />
+          <div className="profile-sections">
+            <div className="profile-info-card">
+              <h2>Profile Information</h2>
+              <form onSubmit={handleProfileUpdate}>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>First Name</label>
+                    <input
+                      type="text"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Last Name</label>
+                    <input
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Email Address</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+                <button type="submit" className="save-button">Save Changes</button>
+              </form>
             </div>
-            <div className="form-group">
-              <label>New Password</label>
-              <input
-                type="password"
-                placeholder="Enter new password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label>Confirm New Password</label>
-              <input
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
-            <button type="submit">Update Password</button>
-          </form>
-        </div>
 
-        <div className="settings-section">
-          <h2>Update Profile</h2>
-          <form className="profile-form" onSubmit={handleProfileUpdate}>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+            <div className="settings-card">
+              <h2>Email Signature</h2>
+              <div className="form-group">
+                <label>Your signature will be automatically added to ticket replies</label>
+                <textarea
+                  className="signature-textarea"
+                  rows="4"
+                  placeholder="Best regards,&#10;Your Name&#10;Support Team"
+                  value={signature}
+                  onChange={(e) => setSignature(e.target.value)}
+                />
+              </div>
+              <button className="save-button">Save Signature</button>
             </div>
-            <div className="form-group">
-              <label>First Name</label>
-              <input
-                type="text"
-                placeholder="Enter first name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
+
+            <div className="settings-card">
+              <h2>Notifications</h2>
+              <div className="notification-section">
+                <h3>Email Notifications</h3>
+                <div className="notification-toggle">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={emailNotifications.newTicket}
+                      onChange={(e) => setEmailNotifications({...emailNotifications, newTicket: e.target.checked})}
+                    />
+                    <span>New ticket assigned to me</span>
+                  </label>
+                </div>
+                <div className="notification-toggle">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={emailNotifications.ticketUpdate}
+                      onChange={(e) => setEmailNotifications({...emailNotifications, ticketUpdate: e.target.checked})}
+                    />
+                    <span>Ticket updates and replies</span>
+                  </label>
+                </div>
+                <div className="notification-toggle">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={emailNotifications.ticketClosed}
+                      onChange={(e) => setEmailNotifications({...emailNotifications, ticketClosed: e.target.checked})}
+                    />
+                    <span>Ticket closed</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="notification-section">
+                <h3>In-App Notifications</h3>
+                <div className="notification-toggle">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={inAppNotifications.newTicket}
+                      onChange={(e) => setInAppNotifications({...inAppNotifications, newTicket: e.target.checked})}
+                    />
+                    <span>New ticket assigned to me</span>
+                  </label>
+                </div>
+                <div className="notification-toggle">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={inAppNotifications.ticketUpdate}
+                      onChange={(e) => setInAppNotifications({...inAppNotifications, ticketUpdate: e.target.checked})}
+                    />
+                    <span>Ticket updates and replies</span>
+                  </label>
+                </div>
+                <div className="notification-toggle">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={inAppNotifications.ticketClosed}
+                      onChange={(e) => setInAppNotifications({...inAppNotifications, ticketClosed: e.target.checked})}
+                    />
+                    <span>Ticket closed</span>
+                  </label>
+                </div>
+              </div>
+              <button className="save-button">Save Preferences</button>
             </div>
-            <div className="form-group">
-              <label>Last Name</label>
-              <input
-                type="text"
-                placeholder="Enter last name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
+
+            <div className="settings-card">
+              <h2>Working Hours</h2>
+              <p className="section-description">Set your availability for ticket assignments</p>
+              <div className="working-hours-list">
+                {Object.entries(workingHours).map(([day, hours]) => (
+                  <div key={day} className="working-hours-row">
+                    <label className="day-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={hours.enabled}
+                        onChange={(e) => setWorkingHours({
+                          ...workingHours,
+                          [day]: { ...hours, enabled: e.target.checked }
+                        })}
+                      />
+                      <span className="day-name">{day.charAt(0).toUpperCase() + day.slice(1)}</span>
+                    </label>
+                    {hours.enabled && (
+                      <div className="time-inputs">
+                        <input
+                          type="time"
+                          value={hours.start}
+                          onChange={(e) => setWorkingHours({
+                            ...workingHours,
+                            [day]: { ...hours, start: e.target.value }
+                          })}
+                        />
+                        <span>to</span>
+                        <input
+                          type="time"
+                          value={hours.end}
+                          onChange={(e) => setWorkingHours({
+                            ...workingHours,
+                            [day]: { ...hours, end: e.target.value }
+                          })}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <button className="save-button">Save Working Hours</button>
             </div>
-            <button type="submit">Update Profile</button>
-          </form>
+          </div>
         </div>
       </div>
+
+      {/* Password Change Modal */}
+      {showPasswordModal && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content-white" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Change Password</h2>
+              <button className="modal-close" onClick={closeModal}>×</button>
+            </div>
+            <form onSubmit={handlePasswordChange}>
+              <div className="form-group">
+                <label>Current Password</label>
+                <input
+                  type="password"
+                  placeholder="Enter current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>New Password</label>
+                <input
+                  type="password"
+                  placeholder="Enter new password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Confirm New Password</label>
+                <input
+                  type="password"
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="cancel-button" onClick={closeModal}>
+                  Cancel
+                </button>
+                <button type="submit" className="save-button">
+                  Update Password
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
