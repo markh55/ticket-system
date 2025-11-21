@@ -2,27 +2,35 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getCurrentUser } from "../../../api";
 import "./Sidebar.css";
-import { LayoutDashboard, Ticket, CalendarDays, Settings, NotebookPen } from "lucide-react";
+import {
+  LayoutDashboard,
+  Ticket,
+  CalendarDays,
+  Settings,
+  NotebookPen,
+} from "lucide-react";
 
 export default function Sidebar({ className }) {
   const [isOpen, setIsOpen] = useState(false);
   const [username, setUsername] = useState("");
+  const [isSuperuser, setIsSuperuser] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (token) {
         try {
           const userData = await getCurrentUser(token);
           setUsername(userData.username);
+          setIsSuperuser(userData.is_superuser);
         } catch (error) {
-          console.error('Error fetching user:', error);
+          console.error("Error fetching user:", error);
         }
       }
     };
-    
+
     fetchUser();
   }, []);
 
@@ -37,19 +45,16 @@ export default function Sidebar({ className }) {
 
   return (
     <>
-      <button 
-        className={`mobile-menu-toggle ${isOpen ? 'active' : ''}`} 
-        onClick={toggleSidebar}>
-      </button>
-      
+      <button
+        className={`mobile-menu-toggle ${isOpen ? "active" : ""}`}
+        onClick={toggleSidebar}
+      ></button>
+
       {isOpen && (
-        <div 
-          className="sidebar-overlay active"
-          onClick={toggleSidebar}
-        ></div>
+        <div className="sidebar-overlay active" onClick={toggleSidebar}></div>
       )}
 
-      <nav className={`sidebar ${className || ''} ${isOpen ? 'active' : ''}`}>
+      <nav className={`sidebar ${className || ""} ${isOpen ? "active" : ""}`}>
         <div className="sidebar-header">
           <div className="logo">
             <h2>Code By Mark</h2>
@@ -57,47 +62,88 @@ export default function Sidebar({ className }) {
         </div>
 
         <div className="sidebar-nav">
-          <div 
-            className={`nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}
-            onClick={() => handleNavClick('/dashboard')}
+          {/* Dashboard */}
+          <div
+            className={`nav-item ${
+              location.pathname === "/dashboard" ? "active" : ""
+            }`}
+            onClick={() => handleNavClick("/dashboard")}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && handleNavClick('/dashboard')}
+            onKeyDown={(e) => e.key === "Enter" && handleNavClick("/dashboard")}
           >
-            <span className="icon"><LayoutDashboard size={20} /></span>
+            <span className="icon">
+              <LayoutDashboard size={20} />
+            </span>
             <span>Dashboard</span>
           </div>
-          <div 
-            className={`nav-item ${location.pathname === '/tickets' ? 'active' : ''}`}
-            onClick={() => handleNavClick('/tickets')}
+
+          {/* Tickets */}
+          <div
+            className={`nav-item ${
+              location.pathname === "/tickets" ? "active" : ""
+            }`}
+            onClick={() => handleNavClick("/tickets")}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && handleNavClick('/tickets')}
+            onKeyDown={(e) => e.key === "Enter" && handleNavClick("/tickets")}
           >
-            <span className="icon"><Ticket size={20} /></span>
+            <span className="icon">
+              <Ticket size={20} />
+            </span>
             <span>Tickets</span>
           </div>
-          <div 
-            className={`nav-item ${location.pathname === '/calendar' ? 'active' : ''}`}
-            onClick={() => handleNavClick('/calendar')}
+
+          {/* Calendar */}
+          <div
+            className={`nav-item ${
+              location.pathname === "/calendar" ? "active" : ""
+            }`}
+            onClick={() => handleNavClick("/calendar")}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && handleNavClick('/calendar')}
+            onKeyDown={(e) => e.key === "Enter" && handleNavClick("/calendar")}
           >
-            <span className="icon"><CalendarDays size={20} /></span>
+            <span className="icon">
+              <CalendarDays size={20} />
+            </span>
             <span>Calendar</span>
           </div>
 
-          <div
-            className={`nav-item ${location.pathname === '/settings' ? 'active' : ''}`}
-            onClick={() => handleNavClick('/settings')}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && handleNavClick('/settings')}
-            style={{ marginTop: 'auto' }}
-          >
-            <span className="icon"><Settings size={20} /></span>
-            <span>Settings</span>
+          <div style={{ marginTop: "auto" }}>
+            {/* Administration - only show for superusers */}
+            {isSuperuser && (
+              <div
+                className={`nav-item ${
+                  location.pathname.startsWith("/admin") ? "active" : ""
+                }`}
+                onClick={() => handleNavClick("/admin")}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && handleNavClick("/admin")}
+              >
+                <span className="icon">
+                  <NotebookPen size={20} />
+                </span>
+                <span>Administration</span>
+              </div>
+            )}
+
+            {/* Settings */}
+            <div
+              className={`nav-item ${
+                location.pathname === "/settings" ? "active" : ""
+              }`}
+              onClick={() => handleNavClick("/settings")}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && handleNavClick("/settings")}
+            >
+              <span className="icon">
+                <Settings size={20} />
+              </span>
+              <span>Settings</span>
+            </div>
           </div>
         </div>
 
@@ -105,7 +151,7 @@ export default function Sidebar({ className }) {
           <div className="user-profile">
             <div className="avatar">👤</div>
             <div className="user-info">
-              <p className="username">{username || 'Loading...'}</p>
+              <p className="username">{username || "Loading..."}</p>
             </div>
           </div>
         </div>
