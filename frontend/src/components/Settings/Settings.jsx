@@ -18,7 +18,6 @@ const Settings = () => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [profilePicturePreview, setProfilePicturePreview] = useState(null);
   
-  // Notification preferences
   const [emailNotifications, setEmailNotifications] = useState({
     newTicket: true,
     ticketUpdate: true,
@@ -30,7 +29,6 @@ const Settings = () => {
     ticketClosed: true
   });
 
-  // Working hours
   const [workingHours, setWorkingHours] = useState({
     monday: { enabled: true, start: "09:00", end: "17:00" },
     tuesday: { enabled: true, start: "09:00", end: "17:00" },
@@ -41,26 +39,28 @@ const Settings = () => {
     sunday: { enabled: false, start: "09:00", end: "17:00" }
   });
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  const getToken = () => localStorage.getItem("token");
 
+  useEffect(() => {
     fetch("http://localhost:8000/api/user/", {
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${getToken()}`,
         "Content-Type": "application/json",
       },
     })
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => {
-        console.log("Current User:", data);
         setCurrentUser(data);
         setEmail(data.email || "");
         setFirstName(data.first_name || "");
         setLastName(data.last_name || "");
+        setSignature(data.signature || "");
+        if (data.profile_picture) setProfilePicturePreview(data.profile_picture);
+        if (data.email_notifications) setEmailNotifications(data.email_notifications);
+        if (data.in_app_notifications) setInAppNotifications(data.in_app_notifications);
+        if (data.working_hours) setWorkingHours(data.working_hours);
       })
-      .catch((error) => {
-        console.error("Error fetching user:", error);
-      });
+      .catch((err) => console.error("Error fetching user:", err));
   }, []);
 
   const handleLogout = () => {
@@ -70,18 +70,15 @@ const Settings = () => {
 
   const handlePasswordChange = (e) => {
     e.preventDefault();
-
     if (newPassword !== confirmPassword) {
       alert("New passwords do not match");
       return;
     }
 
-    const token = localStorage.getItem("token");
-
     fetch("http://localhost:8000/api/change-password/", {
       method: "POST",
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${getToken()}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -89,64 +86,46 @@ const Settings = () => {
         new_password: newPassword,
       }),
     })
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((err) => {
-            throw err;
-          });
-        }
-        return response.json();
+      .then((res) => {
+        if (!res.ok) return res.json().then((err) => { throw err; });
+        return res.json();
       })
-      .then((data) => {
+      .then(() => {
         alert("Password changed successfully");
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
         setShowPasswordModal(false);
       })
-      .catch((error) => {
-        console.error("Error changing password:", error);
-        alert(
-          error.old_password ||
-            error.new_password ||
-            "Failed to change password"
-        );
+      .catch((err) => {
+        alert(err.old_password || err.new_password || "Failed to change password");
       });
   };
 
   const handleProfileUpdate = (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
-
     fetch("http://localhost:8000/api/user/update/", {
       method: "PUT",
       headers: {
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${getToken()}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: email,
+        email,
         first_name: firstName,
         last_name: lastName,
       }),
     })
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((err) => {
-            throw err;
-          });
-        }
-        return response.json();
+      .then((res) => {
+        if (!res.ok) return res.json().then((err) => { throw err; });
+        return res.json();
       })
       .then((data) => {
         alert("Profile updated successfully");
         setCurrentUser(data);
       })
-      .catch((error) => {
-        console.error("Error updating profile:", error);
-        alert("Failed to update profile");
-      });
+      .catch(() => alert("Failed to update profile"));
   };
 
   const handleProfilePictureChange = (e) => {
@@ -154,11 +133,99 @@ const Settings = () => {
     if (file) {
       setProfilePicture(file);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePicturePreview(reader.result);
-      };
+      reader.onloadend = () => setProfilePicturePreview(reader.result);
       reader.readAsDataURL(file);
+
+      // Upload immediately
+      const formData = new FormData();
+      formData.append("profile_picture", file);
+
+      fetch("http://localhost:8000/api/user/profile-picture/", {
+        method: "POST",
+        headers: { Authorization: `Token ${getToken()}` },
+        body: formData,
+      })
+        .then((res) => {
+          if (!res.ok) return res.json().then((err) => { throw err; });
+          return res.json();
+        })
+        .then((data) => {
+          alert("Profile picture updated successfully");
+          if (data.profile_picture) setProfilePicturePreview(data.profile_picture);
+        })
+        .catch((err) => alert(err.error || "Failed to upload profile picture"));
     }
+  };
+
+  const handleSaveSignature = () => {
+    fetch("http://localhost:8000/api/user/signature/", {
+      method: "POST",
+      headers: {
+        Authorization: `Token ${getToken()}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ signature }),
+    })
+      .then((res) => {
+        if (!res.ok) return res.json().then((err) => { throw err; });
+        return res.json();
+      })
+      .then(() => alert("Signature saved successfully"))
+      .catch(() => alert("Failed to save signature"));
+  };
+
+  const handleSaveNotifications = () => {
+    fetch("http://localhost:8000/api/user/notifications/", {
+      method: "POST",
+      headers: {
+        Authorization: `Token ${getToken()}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email_notifications: emailNotifications,
+        in_app_notifications: inAppNotifications,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) return res.json().then((err) => { throw err; });
+        return res.json();
+      })
+      .then(() => alert("Notification preferences saved successfully"))
+      .catch(() => alert("Failed to save notification preferences"));
+  };
+
+  const handleSaveWorkingHours = () => {
+    fetch("http://localhost:8000/api/user/working-hours/", {
+      method: "POST",
+      headers: {
+        Authorization: `Token ${getToken()}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ working_hours: workingHours }),
+    })
+      .then((res) => {
+        if (!res.ok) return res.json().then((err) => { throw err; });
+        return res.json();
+      })
+      .then(() => alert("Working hours saved successfully"))
+      .catch(() => alert("Failed to save working hours"));
+  };
+
+  const handleDeleteProfilePicture = () => {
+    fetch("http://localhost:8000/api/user/profile-picture/delete/", {
+      method: "DELETE",
+      headers: { Authorization: `Token ${getToken()}` },
+    })
+      .then((res) => {
+        if (!res.ok) return res.json().then((err) => { throw err; });
+        return res.json();
+      })
+      .then(() => {
+        setProfilePicture(null);
+        setProfilePicturePreview(null);
+        alert("Profile picture deleted successfully");
+      })
+      .catch(() => alert("Failed to delete profile picture"));
   };
 
   const closeModal = () => {
@@ -179,7 +246,7 @@ const Settings = () => {
             <div className="profile-picture-section">
               <div className="profile-picture-placeholder">
                 {profilePicturePreview ? (
-                  <img src={profilePicturePreview} alt="Profile" style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                  <img src={profilePicturePreview} alt="Profile" style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%'}} />
                 ) : (
                   <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
                     <circle cx="60" cy="60" r="60" fill="#e5e7eb"/>
@@ -194,9 +261,20 @@ const Settings = () => {
                 onChange={handleProfilePictureChange}
                 style={{ display: 'none' }}
               />
-              <label htmlFor="profile-picture-upload" className="upload-photo-btn">
-                Upload Photo
-              </label>
+              {profilePicturePreview ? (
+                <div className="profile-picture-buttons">
+                  <label htmlFor="profile-picture-upload" className="edit-photo-btn">
+                    Edit
+                  </label>
+                  <button type="button" className="delete-photo-btn" onClick={handleDeleteProfilePicture}>
+                    Delete
+                  </button>
+                </div>
+              ) : (
+                <label htmlFor="profile-picture-upload" className="upload-photo-btn">
+                  Upload Photo
+                </label>
+              )}
             </div>
             
             <div className="account-details-content">
@@ -215,10 +293,7 @@ const Settings = () => {
                     <label>Account Status</label>
                     <span className="status-badge">Active</span>
                   </div>
-                  <button 
-                    className="change-password-link" 
-                    onClick={() => setShowPasswordModal(true)}
-                  >
+                  <button className="change-password-link" onClick={() => setShowPasswordModal(true)}>
                     Change Password
                   </button>
                 </>
@@ -235,28 +310,16 @@ const Settings = () => {
                 <div className="form-row">
                   <div className="form-group">
                     <label>First Name</label>
-                    <input
-                      type="text"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                    />
+                    <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                   </div>
                   <div className="form-group">
                     <label>Last Name</label>
-                    <input
-                      type="text"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
+                    <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                   </div>
                 </div>
                 <div className="form-group">
                   <label>Email Address</label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <button type="submit" className="save-button">Save Changes</button>
               </form>
@@ -274,7 +337,7 @@ const Settings = () => {
                   onChange={(e) => setSignature(e.target.value)}
                 />
               </div>
-              <button className="save-button">Save Signature</button>
+              <button className="save-button" onClick={handleSaveSignature}>Save Signature</button>
             </div>
 
             <div className="settings-card">
@@ -346,43 +409,43 @@ const Settings = () => {
                   </label>
                 </div>
               </div>
-              <button className="save-button">Save Preferences</button>
+              <button className="save-button" onClick={handleSaveNotifications}>Save Preferences</button>
             </div>
 
             <div className="settings-card">
               <h2>Working Hours</h2>
               <p className="section-description">Set your availability for ticket assignments</p>
               <div className="working-hours-list">
-                {Object.entries(workingHours).map(([day, hours]) => (
+                {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map((day) => (
                   <div key={day} className="working-hours-row">
                     <label className="day-checkbox">
                       <input
                         type="checkbox"
-                        checked={hours.enabled}
+                        checked={workingHours[day]?.enabled || false}
                         onChange={(e) => setWorkingHours({
                           ...workingHours,
-                          [day]: { ...hours, enabled: e.target.checked }
+                          [day]: { ...workingHours[day], enabled: e.target.checked }
                         })}
                       />
                       <span className="day-name">{day.charAt(0).toUpperCase() + day.slice(1)}</span>
                     </label>
-                    {hours.enabled && (
+                    {workingHours[day]?.enabled && (
                       <div className="time-inputs">
                         <input
                           type="time"
-                          value={hours.start}
+                          value={workingHours[day]?.start || "09:00"}
                           onChange={(e) => setWorkingHours({
                             ...workingHours,
-                            [day]: { ...hours, start: e.target.value }
+                            [day]: { ...workingHours[day], start: e.target.value }
                           })}
                         />
                         <span>to</span>
                         <input
                           type="time"
-                          value={hours.end}
+                          value={workingHours[day]?.end || "17:00"}
                           onChange={(e) => setWorkingHours({
                             ...workingHours,
-                            [day]: { ...hours, end: e.target.value }
+                            [day]: { ...workingHours[day], end: e.target.value }
                           })}
                         />
                       </div>
@@ -390,13 +453,12 @@ const Settings = () => {
                   </div>
                 ))}
               </div>
-              <button className="save-button">Save Working Hours</button>
+              <button className="save-button" onClick={handleSaveWorkingHours}>Save Working Hours</button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Password Change Modal */}
       {showPasswordModal && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content-white" onClick={(e) => e.stopPropagation()}>
@@ -407,41 +469,19 @@ const Settings = () => {
             <form onSubmit={handlePasswordChange}>
               <div className="form-group">
                 <label>Current Password</label>
-                <input
-                  type="password"
-                  placeholder="Enter current password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  required
-                />
+                <input type="password" placeholder="Enter current password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
               </div>
               <div className="form-group">
                 <label>New Password</label>
-                <input
-                  type="password"
-                  placeholder="Enter new password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  required
-                />
+                <input type="password" placeholder="Enter new password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
               </div>
               <div className="form-group">
                 <label>Confirm New Password</label>
-                <input
-                  type="password"
-                  placeholder="Confirm new password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                />
+                <input type="password" placeholder="Confirm new password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
               </div>
               <div className="modal-actions">
-                <button type="button" className="cancel-button" onClick={closeModal}>
-                  Cancel
-                </button>
-                <button type="submit" className="save-button">
-                  Update Password
-                </button>
+                <button type="button" className="cancel-button" onClick={closeModal}>Cancel</button>
+                <button type="submit" className="save-button">Update Password</button>
               </div>
             </form>
           </div>
