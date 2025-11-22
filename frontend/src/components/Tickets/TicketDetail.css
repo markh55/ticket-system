@@ -151,40 +151,44 @@
 }
 
 .ticket-detail-page .delete-note-btn {
-  background-color: #ef4444;
-  color: white;
+  color: gray;
   border: none;
-  padding: 6px 14px;
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s;
 }
 
 .ticket-detail-page .delete-note-btn:hover {
   background-color: #dc2626;
+  color: #ffffff;
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
 }
 
 .ticket-detail-page .reply-to-note-btn {
-  background-color: #8b5cf6;
-  color: white;
+  color: #6b7280;
   border: none;
-  padding: 6px 14px;
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s;
   margin-left: 8px;
 }
 
 .ticket-detail-page .reply-to-note-btn:hover {
-  background-color: #7c3aed;
+  background-color: #4b5563;
+  color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3);
 }
 
 .ticket-detail-page .message-body {

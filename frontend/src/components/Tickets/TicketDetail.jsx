@@ -4,6 +4,8 @@ import Sidebar from "../Dashboard/Sidebar/Sidebar";
 import Topbar from "../Dashboard/Topbar/Topbar";
 import "./TicketDetail.css";
 
+import { Trash2, Reply } from "lucide-react";
+
 const TicketDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -359,16 +361,18 @@ const TicketDetail = () => {
                             <button
                               className="delete-note-btn"
                               onClick={() => handleDeleteNote(reply.id)}
+                              title="Delete"
                             >
-                              Delete
+                              <Trash2 size={16} />
                             </button>
                           )}
                         {reply.is_internal && (
                           <button
                             className="reply-to-note-btn"
                             onClick={() => handleReplyToNote(reply.id)}
+                            title="Reply to Note"
                           >
-                            Reply to Note
+                            <Reply size={16} />
                           </button>
                         )}
                       </div>
