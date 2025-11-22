@@ -287,11 +287,39 @@ def admin_roles_list(request):
         return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
     
     groups = Group.objects.all()
-    roles_data = [{
-        'id': group.id,
-        'name': group.name,
-        'permissions': {perm.codename: True for perm in group.permissions.all()}
-    } for group in groups]
+    
+    # Define the expected permission mapping
+    permission_mapping = {
+        'view_tickets': ['view_ticket'],
+        'create_tickets': ['add_ticket'],
+        'edit_tickets': ['change_ticket'],
+        'delete_tickets': ['delete_ticket'],
+        'assign_tickets': ['assign_ticket'],
+        'view_users': ['view_user'],
+        'create_users': ['add_user'],
+        'edit_users': ['change_user'],
+        'delete_users': ['delete_user'],
+        'manage_roles': ['add_group', 'change_group', 'delete_group'],
+        'export_data': ['export_data'],
+    }
+    
+    roles_data = []
+    for group in groups:
+        # Get all permission codenames for this group
+        group_perms = set(perm.codename for perm in group.permissions.all())
+        
+        # Build permissions dict based on expected keys
+        permissions = {}
+        for perm_key, perm_codenames in permission_mapping.items():
+            # Check if any of the mapped codenames exist in group permissions
+            permissions[perm_key] = any(codename in group_perms for codename in perm_codenames)
+        
+        roles_data.append({
+            'id': group.id,
+            'name': group.name,
+            'permissions': permissions
+        })
+    
     return Response(roles_data)
 
 # Admin - Create role
@@ -309,13 +337,31 @@ def admin_create_role(request):
     
     group = Group.objects.create(name=name)
     
-    for perm_codename, enabled in permissions.items():
-        if enabled:
-            try:
-                permission = Permission.objects.get(codename=perm_codename)
-                group.permissions.add(permission)
-            except Permission.DoesNotExist:
-                pass
+    # Map frontend permission keys to Django permission codenames
+    permission_mapping = {
+        'view_tickets': ['view_ticket'],
+        'create_tickets': ['add_ticket'],
+        'edit_tickets': ['change_ticket'],
+        'delete_tickets': ['delete_ticket'],
+        'assign_tickets': ['assign_ticket'],
+        'view_users': ['view_user'],
+        'create_users': ['add_user'],
+        'edit_users': ['change_user'],
+        'delete_users': ['delete_user'],
+        'manage_roles': ['add_group', 'change_group', 'delete_group'],
+        'export_data': ['export_data'],
+    }
+    
+    for perm_key, enabled in permissions.items():
+        if enabled and perm_key in permission_mapping:
+            for codename in permission_mapping[perm_key]:
+                try:
+                    # Try to find permission by codename
+                    permission = Permission.objects.filter(codename=codename).first()
+                    if permission:
+                        group.permissions.add(permission)
+                except Exception as e:
+                    print(f"Error adding permission {codename}: {e}")
     
     return Response({'message': 'Role created successfully'}, status=status.HTTP_201_CREATED)
 
@@ -334,14 +380,31 @@ def admin_update_role(request, role_id):
     group.name = request.data.get('name', group.name)
     permissions = request.data.get('permissions', {})
     
+    # Map frontend permission keys to Django permission codenames
+    permission_mapping = {
+        'view_tickets': ['view_ticket'],
+        'create_tickets': ['add_ticket'],
+        'edit_tickets': ['change_ticket'],
+        'delete_tickets': ['delete_ticket'],
+        'assign_tickets': ['assign_ticket'],
+        'view_users': ['view_user'],
+        'create_users': ['add_user'],
+        'edit_users': ['change_user'],
+        'delete_users': ['delete_user'],
+        'manage_roles': ['add_group', 'change_group', 'delete_group'],
+        'export_data': ['export_data'],
+    }
+    
     group.permissions.clear()
-    for perm_codename, enabled in permissions.items():
-        if enabled:
-            try:
-                permission = Permission.objects.get(codename=perm_codename)
-                group.permissions.add(permission)
-            except Permission.DoesNotExist:
-                pass
+    for perm_key, enabled in permissions.items():
+        if enabled and perm_key in permission_mapping:
+            for codename in permission_mapping[perm_key]:
+                try:
+                    permission = Permission.objects.filter(codename=codename).first()
+                    if permission:
+                        group.permissions.add(permission)
+                except Exception as e:
+                    print(f"Error adding permission {codename}: {e}")
     
     group.save()
     return Response({'message': 'Role updated successfully'}, status=status.HTTP_200_OK)

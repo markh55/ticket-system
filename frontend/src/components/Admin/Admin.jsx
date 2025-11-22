@@ -35,7 +35,7 @@ export default function Admin() {
     role: "",
   });
 
-  // Role Form State
+  // Role Form State - FIXED: Now includes all permissions by default
   const [roleForm, setRoleForm] = useState({
     name: "",
     permissions: {
@@ -80,7 +80,10 @@ export default function Admin() {
       },
     })
       .then((res) => res.json())
-      .then((data) => setRoles(data))
+      .then((data) => {
+        console.log("Roles data from API:", data); // DEBUG
+        setRoles(data);
+      })
       .catch((err) => console.error("Error fetching roles:", err));
   };
 
@@ -228,7 +231,22 @@ export default function Admin() {
       .then(() => {
         alert("Role created successfully");
         setShowRoleModal(false);
-        setRoleForm({ name: "", permissions: {} });
+        setRoleForm({
+          name: "",
+          permissions: {
+            view_tickets: false,
+            create_tickets: false,
+            edit_tickets: false,
+            delete_tickets: false,
+            assign_tickets: false,
+            view_users: false,
+            create_users: false,
+            edit_users: false,
+            delete_users: false,
+            manage_roles: false,
+            export_data: false,
+          },
+        });
         fetchRoles();
       })
       .catch((err) => alert(err.error || "Failed to create role"));
@@ -255,7 +273,22 @@ export default function Admin() {
         alert("Role updated successfully");
         setShowRoleModal(false);
         setSelectedRole(null);
-        setRoleForm({ name: "", permissions: {} });
+        setRoleForm({
+          name: "",
+          permissions: {
+            view_tickets: false,
+            create_tickets: false,
+            edit_tickets: false,
+            delete_tickets: false,
+            assign_tickets: false,
+            view_users: false,
+            create_users: false,
+            edit_users: false,
+            delete_users: false,
+            manage_roles: false,
+            export_data: false,
+          },
+        });
         fetchRoles();
       })
       .catch((err) => alert(err.error || "Failed to update role"));
@@ -316,7 +349,22 @@ export default function Admin() {
       last_name: "",
       role: "",
     });
-    setRoleForm({ name: "", permissions: {} });
+    setRoleForm({
+      name: "",
+      permissions: {
+        view_tickets: false,
+        create_tickets: false,
+        edit_tickets: false,
+        delete_tickets: false,
+        assign_tickets: false,
+        view_users: false,
+        create_users: false,
+        edit_users: false,
+        delete_users: false,
+        manage_roles: false,
+        export_data: false,
+      },
+    });
     setExportFilters({
       date_from: "",
       date_to: "",
@@ -447,35 +495,47 @@ export default function Admin() {
             </button>
 
             <div className="roles-list">
-              {roles.map((role) => (
-                <div key={role.id} className="role-item">
-                  <div className="role-info">
-                    <h3>{role.name}</h3>
-                    <p>
-                      {
-                        Object.keys(role.permissions).filter(
-                          (k) => role.permissions[k]
-                        ).length
-                      }{" "}
-                      permissions enabled
-                    </p>
+              {roles.map((role) => {
+                // Handle permissions - could be object, string, or null
+                let permissions = role.permissions;
+                if (typeof permissions === "string") {
+                  try {
+                    permissions = JSON.parse(permissions);
+                  } catch (e) {
+                    permissions = {};
+                  }
+                }
+                if (!permissions || typeof permissions !== "object") {
+                  permissions = {};
+                }
+
+                const enabledCount = Object.keys(permissions).filter(
+                  (k) => permissions[k] === true
+                ).length;
+
+                return (
+                  <div key={role.id} className="role-item">
+                    <div className="role-info">
+                      <h3>{role.name}</h3>
+                      <p>{enabledCount} permissions enabled</p>
+                    </div>
+                    <div className="role-actions">
+                      <button
+                        className="action-btn edit-btn"
+                        onClick={() => openEditRoleModal(role)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="action-btn delete-btn"
+                        onClick={() => handleDeleteRole(role.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                  <div className="role-actions">
-                    <button
-                      className="action-btn edit-btn"
-                      onClick={() => openEditRoleModal(role)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="action-btn delete-btn"
-                      onClick={() => handleDeleteRole(role.id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
