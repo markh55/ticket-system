@@ -3,10 +3,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework.authtoken.models import Token
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import Group, Permission
+import csv
 
 User = get_user_model()
 
@@ -179,3 +181,201 @@ def save_working_hours(request):
         'message': 'Working hours saved successfully',
         'working_hours': user.working_hours
     }, status=status.HTTP_200_OK)
+
+# Admin - Get all users
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def admin_users_list(request):
+    if not request.user.is_staff:
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    
+    users = User.objects.all()
+    user_data = [{
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'is_active': user.is_active,
+        'role': user.groups.first().id if user.groups.exists() else None
+    } for user in users]
+    return Response(user_data)
+
+# Admin - Create user
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def admin_create_user(request):
+    if not request.user.is_staff:
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    
+    username = request.data.get('username')
+    email = request.data.get('email')
+    password = request.data.get('password')
+    first_name = request.data.get('first_name', '')
+    last_name = request.data.get('last_name', '')
+    role_id = request.data.get('role')
+    
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    user = User.objects.create_user(
+        username=username,
+        email=email,
+        password=password,
+        first_name=first_name,
+        last_name=last_name
+    )
+    
+    if role_id:
+        try:
+            group = Group.objects.get(id=role_id)
+            user.groups.add(group)
+        except Group.DoesNotExist:
+            pass
+    
+    return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+
+# Admin - Update user
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def admin_update_user(request, user_id):
+    if not request.user.is_staff:
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    user.username = request.data.get('username', user.username)
+    user.email = request.data.get('email', user.email)
+    user.first_name = request.data.get('first_name', user.first_name)
+    user.last_name = request.data.get('last_name', user.last_name)
+    user.is_active = request.data.get('is_active', user.is_active)
+    
+    role_id = request.data.get('role')
+    if role_id:
+        user.groups.clear()
+        try:
+            group = Group.objects.get(id=role_id)
+            user.groups.add(group)
+        except Group.DoesNotExist:
+            pass
+    
+    user.save()
+    return Response({'message': 'User updated successfully'}, status=status.HTTP_200_OK)
+
+# Admin - Delete user
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def admin_delete_user(request, user_id):
+    if not request.user.is_staff:
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    
+    try:
+        user = User.objects.get(id=user_id)
+        user.delete()
+        return Response({'message': 'User deleted successfully'}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+# Admin - Get all roles
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def admin_roles_list(request):
+    if not request.user.is_staff:
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    
+    groups = Group.objects.all()
+    roles_data = [{
+        'id': group.id,
+        'name': group.name,
+        'permissions': {perm.codename: True for perm in group.permissions.all()}
+    } for group in groups]
+    return Response(roles_data)
+
+# Admin - Create role
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def admin_create_role(request):
+    if not request.user.is_staff:
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    
+    name = request.data.get('name')
+    permissions = request.data.get('permissions', {})
+    
+    if Group.objects.filter(name=name).exists():
+        return Response({'error': 'Role already exists'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    group = Group.objects.create(name=name)
+    
+    for perm_codename, enabled in permissions.items():
+        if enabled:
+            try:
+                permission = Permission.objects.get(codename=perm_codename)
+                group.permissions.add(permission)
+            except Permission.DoesNotExist:
+                pass
+    
+    return Response({'message': 'Role created successfully'}, status=status.HTTP_201_CREATED)
+
+# Admin - Update role
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def admin_update_role(request, role_id):
+    if not request.user.is_staff:
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    
+    try:
+        group = Group.objects.get(id=role_id)
+    except Group.DoesNotExist:
+        return Response({'error': 'Role not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    group.name = request.data.get('name', group.name)
+    permissions = request.data.get('permissions', {})
+    
+    group.permissions.clear()
+    for perm_codename, enabled in permissions.items():
+        if enabled:
+            try:
+                permission = Permission.objects.get(codename=perm_codename)
+                group.permissions.add(permission)
+            except Permission.DoesNotExist:
+                pass
+    
+    group.save()
+    return Response({'message': 'Role updated successfully'}, status=status.HTTP_200_OK)
+
+# Admin - Delete role
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def admin_delete_role(request, role_id):
+    if not request.user.is_staff:
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    
+    try:
+        group = Group.objects.get(id=role_id)
+        group.delete()
+        return Response({'message': 'Role deleted successfully'}, status=status.HTTP_200_OK)
+    except Group.DoesNotExist:
+        return Response({'error': 'Role not found'}, status=status.HTTP_404_NOT_FOUND)
+
+# Admin - Export data
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def admin_export_data(request, data_type):
+    if not request.user.is_staff:
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{data_type}_export.csv"'
+    
+    writer = csv.writer(response)
+    
+    if data_type == 'users':
+        writer.writerow(['ID', 'Username', 'Email', 'First Name', 'Last Name', 'Active'])
+        users = User.objects.all()
+        for user in users:
+            writer.writerow([user.id, user.username, user.email, user.first_name, user.last_name, user.is_active])
+    
+    return response
