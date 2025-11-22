@@ -137,7 +137,9 @@ export default function Sidebar({ className }) {
               onClick={() => handleNavClick("/settings")}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => e.key === "Enter" && handleNavClick("/settings")}
+              onKeyDown={(e) =>
+                e.key === "Enter" && handleNavClick("/settings")
+              }
             >
               <span className="icon">
                 <Settings size={20} />
@@ -149,7 +151,9 @@ export default function Sidebar({ className }) {
 
         <div className="sidebar-footer">
           <div className="user-profile">
-            <div className="avatar">👤</div>
+            <div className="avatar">
+              {username ? username.charAt(0).toUpperCase() : "?"}
+            </div>
             <div className="user-info">
               <p className="username">{username || "Loading..."}</p>
             </div>

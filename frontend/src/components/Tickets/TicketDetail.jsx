@@ -22,6 +22,27 @@ const TicketDetail = () => {
   const [ccEmail, setCcEmail] = useState("");
   const [bccEmail, setBccEmail] = useState("");
 
+  // Generate a color based on a string (name/email)
+  const getAvatarColor = (str, isStaff) => {
+    if (isStaff) return "#ffffff"; // white for staff
+
+    const colors = [
+      "#e53935", // red
+      "#fb8c00", // orange
+      "#43a047", // green
+      "#00acc1", // cyan
+      "#3949ab", // indigo
+      "#8e24aa", // purple
+      "#d81b60", // pink
+      "#6d4c41", // brown
+      "#00897b", // teal
+      "#1e88e5", // blue
+    ];
+    if (!str) return colors[0];
+    const charCode = str.charCodeAt(0);
+    return colors[charCode % colors.length];
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -279,6 +300,14 @@ const TicketDetail = () => {
             {/* Original ticket message */}
             <div className="message-item">
               <div className="message-header">
+                <div
+                  className="sender-avatar"
+                  style={{
+                    backgroundColor: getAvatarColor(ticket.sender, false),
+                  }}
+                >
+                  {ticket.sender?.charAt(0).toUpperCase() || "?"}
+                </div>
                 <strong>{ticket.sender}</strong>
                 <span className="message-time">
                   {new Date(ticket.created_at).toLocaleString()}
@@ -302,6 +331,21 @@ const TicketDetail = () => {
                       } ${reply.is_internal ? "internal-note" : ""}`}
                     >
                       <div className="message-header">
+                        <div
+                          className="sender-avatar"
+                          style={{
+                            backgroundColor: getAvatarColor(
+                              reply.sender,
+                              reply.is_staff_reply
+                            ),
+                            color: reply.is_staff_reply ? "#374151" : "#ffffff",
+                            border: reply.is_staff_reply
+                              ? "1px solid #9ca3af"
+                              : "none",
+                          }}
+                        >
+                          {reply.sender?.charAt(0).toUpperCase() || "?"}
+                        </div>
                         <strong>{reply.sender}</strong>
                         {reply.is_internal && (
                           <span className="note-badge">Internal Note</span>

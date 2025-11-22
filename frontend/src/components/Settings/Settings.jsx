@@ -15,28 +15,16 @@ const Settings = () => {
   const [lastName, setLastName] = useState("");
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [signature, setSignature] = useState("");
-  const [profilePicture, setProfilePicture] = useState(null);
-  const [profilePicturePreview, setProfilePicturePreview] = useState(null);
-  
+
   const [emailNotifications, setEmailNotifications] = useState({
     newTicket: true,
     ticketUpdate: true,
-    ticketClosed: false
+    ticketClosed: false,
   });
   const [inAppNotifications, setInAppNotifications] = useState({
     newTicket: true,
     ticketUpdate: true,
-    ticketClosed: true
-  });
-
-  const [workingHours, setWorkingHours] = useState({
-    monday: { enabled: true, start: "09:00", end: "17:00" },
-    tuesday: { enabled: true, start: "09:00", end: "17:00" },
-    wednesday: { enabled: true, start: "09:00", end: "17:00" },
-    thursday: { enabled: true, start: "09:00", end: "17:00" },
-    friday: { enabled: true, start: "09:00", end: "17:00" },
-    saturday: { enabled: false, start: "09:00", end: "17:00" },
-    sunday: { enabled: false, start: "09:00", end: "17:00" }
+    ticketClosed: true,
   });
 
   const getToken = () => localStorage.getItem("token");
@@ -55,10 +43,10 @@ const Settings = () => {
         setFirstName(data.first_name || "");
         setLastName(data.last_name || "");
         setSignature(data.signature || "");
-        if (data.profile_picture) setProfilePicturePreview(data.profile_picture);
-        if (data.email_notifications) setEmailNotifications(data.email_notifications);
-        if (data.in_app_notifications) setInAppNotifications(data.in_app_notifications);
-        if (data.working_hours) setWorkingHours(data.working_hours);
+        if (data.email_notifications)
+          setEmailNotifications(data.email_notifications);
+        if (data.in_app_notifications)
+          setInAppNotifications(data.in_app_notifications);
       })
       .catch((err) => console.error("Error fetching user:", err));
   }, []);
@@ -87,7 +75,10 @@ const Settings = () => {
       }),
     })
       .then((res) => {
-        if (!res.ok) return res.json().then((err) => { throw err; });
+        if (!res.ok)
+          return res.json().then((err) => {
+            throw err;
+          });
         return res.json();
       })
       .then(() => {
@@ -98,7 +89,9 @@ const Settings = () => {
         setShowPasswordModal(false);
       })
       .catch((err) => {
-        alert(err.old_password || err.new_password || "Failed to change password");
+        alert(
+          err.old_password || err.new_password || "Failed to change password"
+        );
       });
   };
 
@@ -118,7 +111,10 @@ const Settings = () => {
       }),
     })
       .then((res) => {
-        if (!res.ok) return res.json().then((err) => { throw err; });
+        if (!res.ok)
+          return res.json().then((err) => {
+            throw err;
+          });
         return res.json();
       })
       .then((data) => {
@@ -126,35 +122,6 @@ const Settings = () => {
         setCurrentUser(data);
       })
       .catch(() => alert("Failed to update profile"));
-  };
-
-  const handleProfilePictureChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProfilePicture(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setProfilePicturePreview(reader.result);
-      reader.readAsDataURL(file);
-
-      // Upload immediately
-      const formData = new FormData();
-      formData.append("profile_picture", file);
-
-      fetch("http://localhost:8000/api/user/profile-picture/", {
-        method: "POST",
-        headers: { Authorization: `Token ${getToken()}` },
-        body: formData,
-      })
-        .then((res) => {
-          if (!res.ok) return res.json().then((err) => { throw err; });
-          return res.json();
-        })
-        .then((data) => {
-          alert("Profile picture updated successfully");
-          if (data.profile_picture) setProfilePicturePreview(data.profile_picture);
-        })
-        .catch((err) => alert(err.error || "Failed to upload profile picture"));
-    }
   };
 
   const handleSaveSignature = () => {
@@ -167,7 +134,10 @@ const Settings = () => {
       body: JSON.stringify({ signature }),
     })
       .then((res) => {
-        if (!res.ok) return res.json().then((err) => { throw err; });
+        if (!res.ok)
+          return res.json().then((err) => {
+            throw err;
+          });
         return res.json();
       })
       .then(() => alert("Signature saved successfully"))
@@ -187,45 +157,14 @@ const Settings = () => {
       }),
     })
       .then((res) => {
-        if (!res.ok) return res.json().then((err) => { throw err; });
+        if (!res.ok)
+          return res.json().then((err) => {
+            throw err;
+          });
         return res.json();
       })
       .then(() => alert("Notification preferences saved successfully"))
       .catch(() => alert("Failed to save notification preferences"));
-  };
-
-  const handleSaveWorkingHours = () => {
-    fetch("http://localhost:8000/api/user/working-hours/", {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ working_hours: workingHours }),
-    })
-      .then((res) => {
-        if (!res.ok) return res.json().then((err) => { throw err; });
-        return res.json();
-      })
-      .then(() => alert("Working hours saved successfully"))
-      .catch(() => alert("Failed to save working hours"));
-  };
-
-  const handleDeleteProfilePicture = () => {
-    fetch("http://localhost:8000/api/user/profile-picture/delete/", {
-      method: "DELETE",
-      headers: { Authorization: `Token ${getToken()}` },
-    })
-      .then((res) => {
-        if (!res.ok) return res.json().then((err) => { throw err; });
-        return res.json();
-      })
-      .then(() => {
-        setProfilePicture(null);
-        setProfilePicturePreview(null);
-        alert("Profile picture deleted successfully");
-      })
-      .catch(() => alert("Failed to delete profile picture"));
   };
 
   const closeModal = () => {
@@ -244,39 +183,11 @@ const Settings = () => {
         <div className="settings-container">
           <div className="account-details-card">
             <div className="profile-picture-section">
-              <div className="profile-picture-placeholder">
-                {profilePicturePreview ? (
-                  <img src={profilePicturePreview} alt="Profile" style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%'}} />
-                ) : (
-                  <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
-                    <circle cx="60" cy="60" r="60" fill="#e5e7eb"/>
-                    <path d="M60 60c11.598 0 21-9.402 21-21s-9.402-21-21-21-21 9.402-21 21 9.402 21 21 21zm0 10.5c-14 0-42 7.028-42 21v10.5h84v-10.5c0-13.972-28-21-42-21z" fill="#9ca3af"/>
-                  </svg>
-                )}
+              <div className="profile-avatar">
+                {currentUser?.username?.charAt(0).toUpperCase() || "?"}
               </div>
-              <input
-                type="file"
-                id="profile-picture-upload"
-                accept="image/*"
-                onChange={handleProfilePictureChange}
-                style={{ display: 'none' }}
-              />
-              {profilePicturePreview ? (
-                <div className="profile-picture-buttons">
-                  <label htmlFor="profile-picture-upload" className="edit-photo-btn">
-                    Edit
-                  </label>
-                  <button type="button" className="delete-photo-btn" onClick={handleDeleteProfilePicture}>
-                    Delete
-                  </button>
-                </div>
-              ) : (
-                <label htmlFor="profile-picture-upload" className="upload-photo-btn">
-                  Upload Photo
-                </label>
-              )}
             </div>
-            
+
             <div className="account-details-content">
               <h2>Account Details</h2>
               {currentUser ? (
@@ -293,7 +204,10 @@ const Settings = () => {
                     <label>Account Status</label>
                     <span className="status-badge">Active</span>
                   </div>
-                  <button className="change-password-link" onClick={() => setShowPasswordModal(true)}>
+                  <button
+                    className="change-password-link"
+                    onClick={() => setShowPasswordModal(true)}
+                  >
                     Change Password
                   </button>
                 </>
@@ -310,25 +224,41 @@ const Settings = () => {
                 <div className="form-row">
                   <div className="form-group">
                     <label>First Name</label>
-                    <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                    <input
+                      type="text"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
                   </div>
                   <div className="form-group">
                     <label>Last Name</label>
-                    <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    <input
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
                   </div>
                 </div>
                 <div className="form-group">
                   <label>Email Address</label>
-                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
-                <button type="submit" className="save-button">Save Changes</button>
+                <button type="submit" className="save-button">
+                  Save Changes
+                </button>
               </form>
             </div>
 
             <div className="settings-card">
               <h2>Email Signature</h2>
               <div className="form-group">
-                <label>Your signature will be automatically added to ticket replies</label>
+                <label>
+                  Your signature will be automatically added to ticket replies
+                </label>
                 <textarea
                   className="signature-textarea"
                   rows="4"
@@ -337,7 +267,9 @@ const Settings = () => {
                   onChange={(e) => setSignature(e.target.value)}
                 />
               </div>
-              <button className="save-button" onClick={handleSaveSignature}>Save Signature</button>
+              <button className="save-button" onClick={handleSaveSignature}>
+                Save Signature
+              </button>
             </div>
 
             <div className="settings-card">
@@ -349,7 +281,12 @@ const Settings = () => {
                     <input
                       type="checkbox"
                       checked={emailNotifications.newTicket}
-                      onChange={(e) => setEmailNotifications({...emailNotifications, newTicket: e.target.checked})}
+                      onChange={(e) =>
+                        setEmailNotifications({
+                          ...emailNotifications,
+                          newTicket: e.target.checked,
+                        })
+                      }
                     />
                     <span>New ticket assigned to me</span>
                   </label>
@@ -359,7 +296,12 @@ const Settings = () => {
                     <input
                       type="checkbox"
                       checked={emailNotifications.ticketUpdate}
-                      onChange={(e) => setEmailNotifications({...emailNotifications, ticketUpdate: e.target.checked})}
+                      onChange={(e) =>
+                        setEmailNotifications({
+                          ...emailNotifications,
+                          ticketUpdate: e.target.checked,
+                        })
+                      }
                     />
                     <span>Ticket updates and replies</span>
                   </label>
@@ -369,7 +311,12 @@ const Settings = () => {
                     <input
                       type="checkbox"
                       checked={emailNotifications.ticketClosed}
-                      onChange={(e) => setEmailNotifications({...emailNotifications, ticketClosed: e.target.checked})}
+                      onChange={(e) =>
+                        setEmailNotifications({
+                          ...emailNotifications,
+                          ticketClosed: e.target.checked,
+                        })
+                      }
                     />
                     <span>Ticket closed</span>
                   </label>
@@ -383,7 +330,12 @@ const Settings = () => {
                     <input
                       type="checkbox"
                       checked={inAppNotifications.newTicket}
-                      onChange={(e) => setInAppNotifications({...inAppNotifications, newTicket: e.target.checked})}
+                      onChange={(e) =>
+                        setInAppNotifications({
+                          ...inAppNotifications,
+                          newTicket: e.target.checked,
+                        })
+                      }
                     />
                     <span>New ticket assigned to me</span>
                   </label>
@@ -393,7 +345,12 @@ const Settings = () => {
                     <input
                       type="checkbox"
                       checked={inAppNotifications.ticketUpdate}
-                      onChange={(e) => setInAppNotifications({...inAppNotifications, ticketUpdate: e.target.checked})}
+                      onChange={(e) =>
+                        setInAppNotifications({
+                          ...inAppNotifications,
+                          ticketUpdate: e.target.checked,
+                        })
+                      }
                     />
                     <span>Ticket updates and replies</span>
                   </label>
@@ -403,57 +360,20 @@ const Settings = () => {
                     <input
                       type="checkbox"
                       checked={inAppNotifications.ticketClosed}
-                      onChange={(e) => setInAppNotifications({...inAppNotifications, ticketClosed: e.target.checked})}
+                      onChange={(e) =>
+                        setInAppNotifications({
+                          ...inAppNotifications,
+                          ticketClosed: e.target.checked,
+                        })
+                      }
                     />
                     <span>Ticket closed</span>
                   </label>
                 </div>
               </div>
-              <button className="save-button" onClick={handleSaveNotifications}>Save Preferences</button>
-            </div>
-
-            <div className="settings-card">
-              <h2>Working Hours</h2>
-              <p className="section-description">Set your availability for ticket assignments</p>
-              <div className="working-hours-list">
-                {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map((day) => (
-                  <div key={day} className="working-hours-row">
-                    <label className="day-checkbox">
-                      <input
-                        type="checkbox"
-                        checked={workingHours[day]?.enabled || false}
-                        onChange={(e) => setWorkingHours({
-                          ...workingHours,
-                          [day]: { ...workingHours[day], enabled: e.target.checked }
-                        })}
-                      />
-                      <span className="day-name">{day.charAt(0).toUpperCase() + day.slice(1)}</span>
-                    </label>
-                    {workingHours[day]?.enabled && (
-                      <div className="time-inputs">
-                        <input
-                          type="time"
-                          value={workingHours[day]?.start || "09:00"}
-                          onChange={(e) => setWorkingHours({
-                            ...workingHours,
-                            [day]: { ...workingHours[day], start: e.target.value }
-                          })}
-                        />
-                        <span>to</span>
-                        <input
-                          type="time"
-                          value={workingHours[day]?.end || "17:00"}
-                          onChange={(e) => setWorkingHours({
-                            ...workingHours,
-                            [day]: { ...workingHours[day], end: e.target.value }
-                          })}
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <button className="save-button" onClick={handleSaveWorkingHours}>Save Working Hours</button>
+              <button className="save-button" onClick={handleSaveNotifications}>
+                Save Preferences
+              </button>
             </div>
           </div>
         </div>
@@ -461,27 +381,58 @@ const Settings = () => {
 
       {showPasswordModal && (
         <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content-white" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="modal-content-white"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="modal-header">
               <h2>Change Password</h2>
-              <button className="modal-close" onClick={closeModal}>×</button>
+              <button className="modal-close" onClick={closeModal}>
+                ×
+              </button>
             </div>
             <form onSubmit={handlePasswordChange}>
               <div className="form-group">
                 <label>Current Password</label>
-                <input type="password" placeholder="Enter current password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
+                <input
+                  type="password"
+                  placeholder="Enter current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  required
+                />
               </div>
               <div className="form-group">
                 <label>New Password</label>
-                <input type="password" placeholder="Enter new password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
+                <input
+                  type="password"
+                  placeholder="Enter new password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
               </div>
               <div className="form-group">
                 <label>Confirm New Password</label>
-                <input type="password" placeholder="Confirm new password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+                <input
+                  type="password"
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
               </div>
               <div className="modal-actions">
-                <button type="button" className="cancel-button" onClick={closeModal}>Cancel</button>
-                <button type="submit" className="save-button">Update Password</button>
+                <button
+                  type="button"
+                  className="cancel-button"
+                  onClick={closeModal}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="save-button">
+                  Update Password
+                </button>
               </div>
             </form>
           </div>
