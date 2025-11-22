@@ -45,8 +45,6 @@
 .ticket-detail-page .ticket-actions {
   display: flex;
   gap: 10px;
-  padding-top: 15px;
-  border-top: 1px solid #e5e5e5;
   margin-top: 20px;
 }
 
@@ -67,47 +65,42 @@
   border-color: #9ca3af;
 }
 
-/* Conversation thread */
-.ticket-detail-page .conversation-thread {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+/* Conversation thread container - single outer box */
+.ticket-detail-page .conversation-thread-container {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
   margin-bottom: 20px;
 }
 
-/* Message cards */
-.ticket-detail-page .message-card {
-  background: #f9fafb;
-  border-radius: 8px;
+.ticket-detail-page .conversation-thread {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Message items - no borders, just dividers */
+.ticket-detail-page .message-item {
   padding: 20px;
-  border: 1px solid #e5e7eb;
-  transition: box-shadow 0.2s;
+  border-bottom: 1px solid #f3f4f6;
+  background: transparent;
 }
 
-.ticket-detail-page .message-card:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+.ticket-detail-page .message-item:last-child {
+  border-bottom: none;
 }
 
-.ticket-detail-page .message-card.customer-message {
-  border-left: 3px solid #3b82f6;
+.ticket-detail-page .message-item.customer-message {
+  background: #f8fafc;
 }
 
-.ticket-detail-page .message-card.staff-message {
-  border-left: 3px solid #10b981;
+.ticket-detail-page .message-item.staff-message {
   background: #f0fdf4;
 }
 
-.ticket-detail-page .message-card.internal-note {
+.ticket-detail-page .message-item.internal-note {
   background-color: #fffbeb;
   border-left: 4px solid #fbbf24;
-  border: 1px solid #fde68a;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.ticket-detail-page .message-card.internal-note.has-reply-box {
-  border-bottom: none;
-  margin-bottom: 0;
+  margin-left: -1px;
 }
 
 .ticket-detail-page .message-header {
@@ -115,8 +108,8 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 0;
+  border-bottom: none;
   flex-wrap: wrap;
 }
 
@@ -270,14 +263,14 @@
 
 .ticket-detail-page .inline-reply-box {
   margin-top: 0;
-  margin-bottom: 16px;
+  margin-bottom: 0;
   background: #fffbeb;
   border: 1px solid #fde68a;
   border-left: 4px solid #fbbf24;
   border-top: none;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  padding-top: 0;
+  padding: 20px;
 }
 
 .ticket-detail-page .reply-box textarea {
@@ -341,6 +334,83 @@
 .ticket-detail-page .reply-box:has(select) select {
   max-width: 400px;
   display: block;
+}
+
+/* Email fields for Reply/Forward boxes */
+.ticket-detail-page .email-field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ticket-detail-page .email-field label {
+  min-width: 45px;
+  width: 45px;
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+.ticket-detail-page .email-field input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #374151;
+  background-color: white;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.ticket-detail-page .email-field input:hover {
+  border-color: #9ca3af;
+}
+
+.ticket-detail-page .email-field input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.ticket-detail-page .email-field input::placeholder {
+  color: #9ca3af;
+}
+
+/* Reply box actions container */
+.ticket-detail-page .reply-box-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 0;
+}
+
+.ticket-detail-page .reply-box-actions button {
+  margin-right: 0;
+}
+
+.ticket-detail-page .reply-box-actions button:first-child {
+  background: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.ticket-detail-page .reply-box-actions button:first-child:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+}
+
+.ticket-detail-page .reply-box-actions button:last-child {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.ticket-detail-page .reply-box-actions button:last-child:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
 }
 
 /* Modal Styles */

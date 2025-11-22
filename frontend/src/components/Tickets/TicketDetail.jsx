@@ -17,10 +17,14 @@ const TicketDetail = () => {
   const [selectedAgent, setSelectedAgent] = useState("");
   const [assignMessage, setAssignMessage] = useState("");
 
+  // Email fields for reply/forward
+  const [toEmail, setToEmail] = useState("");
+  const [ccEmail, setCcEmail] = useState("");
+  const [bccEmail, setBccEmail] = useState("");
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    // Get current user info
     fetch("http://localhost:8000/api/user/", {
       headers: {
         Authorization: `Token ${token}`,
@@ -36,7 +40,6 @@ const TicketDetail = () => {
         console.error("Error fetching user:", error);
       });
 
-    // Fetch users list for assignment
     fetch("http://localhost:8000/api/users/", {
       headers: {
         Authorization: `Token ${token}`,
@@ -88,6 +91,19 @@ const TicketDetail = () => {
         setReplies([]);
       });
   }, [id]);
+
+  // Reset and prefill email fields when action changes
+  useEffect(() => {
+    if (activeAction === "reply") {
+      setToEmail(ticket?.sender || "");
+      setCcEmail("");
+      setBccEmail("");
+    } else if (activeAction === "forward") {
+      setToEmail("");
+      setCcEmail("");
+      setBccEmail("");
+    }
+  }, [activeAction, ticket]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -146,10 +162,27 @@ const TicketDetail = () => {
       return;
     }
 
+    // Validate To field for reply/forward
+    if (
+      (activeAction === "reply" || activeAction === "forward") &&
+      !toEmail.trim()
+    ) {
+      alert("Please enter a recipient email address.");
+      return;
+    }
+
     const payload = {
       body: replyText,
       is_staff_reply: true,
     };
+
+    // Add email fields for reply/forward
+    if (activeAction === "reply" || activeAction === "forward") {
+      payload.to = toEmail;
+      if (ccEmail.trim()) payload.cc = ccEmail;
+      if (bccEmail.trim()) payload.bcc = bccEmail;
+      if (activeAction === "forward") payload.is_forward = true;
+    }
 
     if (activeAction === "note" || replyingToNoteId) {
       payload.is_internal = true;
@@ -175,6 +208,9 @@ const TicketDetail = () => {
         setReplyText("");
         setActiveAction(null);
         setReplyingToNoteId(null);
+        setToEmail("");
+        setCcEmail("");
+        setBccEmail("");
       })
       .catch((error) => {
         console.error("Error sending reply:", error);
@@ -216,6 +252,14 @@ const TicketDetail = () => {
     }
   };
 
+  const handleCancelAction = () => {
+    setActiveAction(null);
+    setReplyText("");
+    setToEmail("");
+    setCcEmail("");
+    setBccEmail("");
+  };
+
   if (!ticket) {
     return <div>Loading...</div>;
   }
@@ -230,92 +274,88 @@ const TicketDetail = () => {
           <h1>{ticket.subject}</h1>
         </div>
 
-        <div className="conversation-thread">
-          <div className="message-card">
-            <div className="message-header">
-              <strong>{ticket.sender}</strong>
-              <span className="message-time">
-                {new Date(ticket.created_at).toLocaleString()}
-              </span>
+        <div className="conversation-thread-container">
+          <div className="conversation-thread">
+            {/* Original ticket message */}
+            <div className="message-item">
+              <div className="message-header">
+                <strong>{ticket.sender}</strong>
+                <span className="message-time">
+                  {new Date(ticket.created_at).toLocaleString()}
+                </span>
+              </div>
+              <div className="message-body">
+                <p>{ticket.body}</p>
+              </div>
             </div>
-            <div className="message-body">
-              <p>{ticket.body}</p>
-            </div>
-          </div>
 
-          {Array.isArray(replies) &&
-            replies.map((reply) => {
-              console.log(
-                "Reply:",
-                reply.id,
-                "created_by:",
-                reply.created_by,
-                "currentUser:",
-                currentUser?.id
-              );
-              return (
-                <div key={reply.id}>
-                  <div
-                    className={`message-card ${
-                      reply.is_staff_reply
-                        ? "staff-message"
-                        : "customer-message"
-                    } ${reply.is_internal ? "internal-note" : ""}`}
-                  >
-                    <div className="message-header">
-                      <strong>{reply.sender}</strong>
-                      {reply.is_internal && (
-                        <span className="note-badge">Internal Note</span>
-                      )}
-                      <span className="message-time">
-                        {new Date(reply.created_at).toLocaleString()}
-                      </span>
-                      {reply.is_internal &&
-                        currentUser &&
-                        reply.created_by === currentUser.id && (
+            {/* All replies */}
+            {Array.isArray(replies) &&
+              replies.map((reply) => {
+                return (
+                  <div key={reply.id}>
+                    <div
+                      className={`message-item ${
+                        reply.is_staff_reply
+                          ? "staff-message"
+                          : "customer-message"
+                      } ${reply.is_internal ? "internal-note" : ""}`}
+                    >
+                      <div className="message-header">
+                        <strong>{reply.sender}</strong>
+                        {reply.is_internal && (
+                          <span className="note-badge">Internal Note</span>
+                        )}
+                        <span className="message-time">
+                          {new Date(reply.created_at).toLocaleString()}
+                        </span>
+                        {reply.is_internal &&
+                          currentUser &&
+                          reply.created_by === currentUser.id && (
+                            <button
+                              className="delete-note-btn"
+                              onClick={() => handleDeleteNote(reply.id)}
+                            >
+                              Delete
+                            </button>
+                          )}
+                        {reply.is_internal && (
                           <button
-                            className="delete-note-btn"
-                            onClick={() => handleDeleteNote(reply.id)}
+                            className="reply-to-note-btn"
+                            onClick={() => handleReplyToNote(reply.id)}
                           >
-                            Delete
+                            Reply to Note
                           </button>
                         )}
-                      {reply.is_internal && (
-                        <button
-                          className="reply-to-note-btn"
-                          onClick={() => handleReplyToNote(reply.id)}
-                        >
-                          Reply to Note
-                        </button>
-                      )}
+                      </div>
+                      <div className="message-body">
+                        <p>{reply.body}</p>
+                      </div>
                     </div>
-                    <div className="message-body">
-                      <p>{reply.body}</p>
-                    </div>
-                  </div>
 
-                  {/* Reply box appears right below this note */}
-                  {replyingToNoteId === reply.id && (
-                    <div className="reply-box inline-reply-box">
-                      <textarea
-                        placeholder="Reply to internal note..."
-                        value={replyText}
-                        onChange={(e) => setReplyText(e.target.value)}
-                      ></textarea>
-                      <button onClick={handleSend}>Send</button>
-                      <button
-                        onClick={() => {
-                          setReplyingToNoteId(null);
-                          setReplyText("");
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                    {/* Reply box appears right below this note */}
+                    {replyingToNoteId === reply.id && (
+                      <div className="reply-box inline-reply-box">
+                        <textarea
+                          placeholder="Reply to internal note..."
+                          value={replyText}
+                          onChange={(e) => setReplyText(e.target.value)}
+                        ></textarea>
+                        <button onClick={handleSend}>Send</button>
+                        <button
+                          onClick={() => {
+                            setReplyingToNoteId(null);
+                            setReplyText("");
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+          </div>
         </div>
 
         <div className="ticket-actions">
@@ -374,21 +414,102 @@ const TicketDetail = () => {
           </div>
         )}
 
-        {activeAction && activeAction !== "assign" && (
+        {/* Reply Box with To, CC, BCC */}
+        {activeAction === "reply" && (
           <div className="reply-box">
+            <div className="email-field">
+              <label>To:</label>
+              <input
+                type="email"
+                value={toEmail}
+                onChange={(e) => setToEmail(e.target.value)}
+                placeholder="Recipient email"
+              />
+            </div>
+            <div className="email-field">
+              <label>CC:</label>
+              <input
+                type="email"
+                value={ccEmail}
+                onChange={(e) => setCcEmail(e.target.value)}
+                placeholder="CC recipients (optional)"
+              />
+            </div>
+            <div className="email-field">
+              <label>BCC:</label>
+              <input
+                type="email"
+                value={bccEmail}
+                onChange={(e) => setBccEmail(e.target.value)}
+                placeholder="BCC recipients (optional)"
+              />
+            </div>
             <textarea
-              placeholder={`Enter your ${activeAction}...`}
+              placeholder="Enter your reply..."
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
             ></textarea>
-            <button onClick={handleSend}>Send</button>
-            <button
-              onClick={() => {
-                setActiveAction(null);
-              }}
-            >
-              Cancel
-            </button>
+            <div className="reply-box-actions">
+              <button onClick={handleSend}>Send</button>
+              <button onClick={handleCancelAction}>Cancel</button>
+            </div>
+          </div>
+        )}
+
+        {/* Forward Box with To, CC, BCC (not prefilled) */}
+        {activeAction === "forward" && (
+          <div className="reply-box">
+            <div className="email-field">
+              <label>To:</label>
+              <input
+                type="email"
+                value={toEmail}
+                onChange={(e) => setToEmail(e.target.value)}
+                placeholder="Recipient email"
+              />
+            </div>
+            <div className="email-field">
+              <label>CC:</label>
+              <input
+                type="email"
+                value={ccEmail}
+                onChange={(e) => setCcEmail(e.target.value)}
+                placeholder="CC recipients (optional)"
+              />
+            </div>
+            <div className="email-field">
+              <label>BCC:</label>
+              <input
+                type="email"
+                value={bccEmail}
+                onChange={(e) => setBccEmail(e.target.value)}
+                placeholder="BCC recipients (optional)"
+              />
+            </div>
+            <textarea
+              placeholder="Enter your message..."
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+            ></textarea>
+            <div className="reply-box-actions">
+              <button onClick={handleSend}>Send</button>
+              <button onClick={handleCancelAction}>Cancel</button>
+            </div>
+          </div>
+        )}
+
+        {/* Note Box (no email fields) */}
+        {activeAction === "note" && (
+          <div className="reply-box">
+            <textarea
+              placeholder="Enter your note..."
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+            ></textarea>
+            <div className="reply-box-actions">
+              <button onClick={handleSend}>Send</button>
+              <button onClick={handleCancelAction}>Cancel</button>
+            </div>
           </div>
         )}
       </div>
