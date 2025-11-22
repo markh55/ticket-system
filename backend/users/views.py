@@ -361,7 +361,7 @@ def admin_delete_role(request, role_id):
         return Response({'error': 'Role not found'}, status=status.HTTP_404_NOT_FOUND)
 
 # Admin - Export data
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def admin_export_data(request, data_type):
     if not request.user.is_staff:
@@ -377,5 +377,43 @@ def admin_export_data(request, data_type):
         users = User.objects.all()
         for user in users:
             writer.writerow([user.id, user.username, user.email, user.first_name, user.last_name, user.is_active])
+    
+    elif data_type == 'tickets':
+        from tickets.models import Ticket
+        
+        # Get filter parameters from request body
+        date_from = request.data.get('date_from')
+        date_to = request.data.get('date_to')
+        status_filter = request.data.get('status')
+        priority_filter = request.data.get('priority')
+        assigned_to_filter = request.data.get('assigned_to')
+        
+        # Apply filters
+        tickets = Ticket.objects.all()
+        
+        if date_from:
+            tickets = tickets.filter(created_at__gte=date_from)
+        if date_to:
+            tickets = tickets.filter(created_at__lte=date_to)
+        if status_filter:
+            tickets = tickets.filter(status=status_filter)
+        if priority_filter:
+            tickets = tickets.filter(priority=priority_filter)
+        if assigned_to_filter:
+            tickets = tickets.filter(assigned_to_id=assigned_to_filter)
+        
+        writer.writerow(['ID', 'Subject', 'Sender', 'Status', 'Priority', 'Assigned To', 'Created At', 'Updated At'])
+        for ticket in tickets:
+            assigned_name = ticket.assigned_to.username if ticket.assigned_to else 'Unassigned'
+            writer.writerow([
+                ticket.id,
+                ticket.subject,
+                ticket.sender,
+                ticket.status,
+                ticket.priority,
+                assigned_name,
+                ticket.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                ticket.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
     
     return response

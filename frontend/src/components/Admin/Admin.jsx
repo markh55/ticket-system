@@ -11,8 +11,19 @@ export default function Admin() {
   const [showCreateUserModal, setShowCreateUserModal] = useState(false);
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exportType, setExportType] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedRole, setSelectedRole] = useState(null);
+
+  // Export filters state
+  const [exportFilters, setExportFilters] = useState({
+    date_from: "",
+    date_to: "",
+    status: "",
+    priority: "",
+    assigned_to: "",
+  });
 
   // Create User Form State
   const [newUser, setNewUser] = useState({
@@ -155,24 +166,44 @@ export default function Admin() {
       .catch((err) => alert(err.error || "Failed to delete user"));
   };
 
-  const handleExportData = (dataType) => {
-    fetch(`http://localhost:8000/api/admin/export/${dataType}/`, {
+  const openExportModal = (dataType) => {
+    setExportType(dataType);
+    setShowExportModal(true);
+  };
+
+  const handleExportData = (e) => {
+    e.preventDefault();
+
+    const body = exportType === "tickets" ? exportFilters : {};
+
+    fetch(`http://localhost:8000/api/admin/export/${exportType}/`, {
+      method: "POST",
       headers: {
         Authorization: `Token ${getToken()}`,
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify(body),
     })
       .then((res) => res.blob())
       .then((blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `${dataType}_export_${
+        a.download = `${exportType}_export_${
           new Date().toISOString().split("T")[0]
         }.csv`;
         document.body.appendChild(a);
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
+        setShowExportModal(false);
+        setExportFilters({
+          date_from: "",
+          date_to: "",
+          status: "",
+          priority: "",
+          assigned_to: "",
+        });
       })
       .catch((err) => alert("Failed to export data"));
   };
@@ -273,8 +304,10 @@ export default function Admin() {
     setShowCreateUserModal(false);
     setShowEditUserModal(false);
     setShowRoleModal(false);
+    setShowExportModal(false);
     setSelectedUser(null);
     setSelectedRole(null);
+    setExportType("");
     setNewUser({
       username: "",
       email: "",
@@ -284,6 +317,13 @@ export default function Admin() {
       role: "",
     });
     setRoleForm({ name: "", permissions: {} });
+    setExportFilters({
+      date_from: "",
+      date_to: "",
+      status: "",
+      priority: "",
+      assigned_to: "",
+    });
   };
 
   return (
@@ -373,19 +413,19 @@ export default function Admin() {
             <div className="export-buttons">
               <button
                 className="save-button"
-                onClick={() => handleExportData("users")}
+                onClick={() => openExportModal("users")}
               >
                 Export Users
               </button>
               <button
                 className="save-button"
-                onClick={() => handleExportData("tickets")}
+                onClick={() => openExportModal("tickets")}
               >
                 Export Tickets
               </button>
               <button
                 className="save-button"
-                onClick={() => handleExportData("all")}
+                onClick={() => openExportModal("all")}
               >
                 Export All Data
               </button>
@@ -736,6 +776,136 @@ export default function Admin() {
                 </button>
                 <button type="submit" className="save-button">
                   {selectedRole ? "Update Role" : "Create Role"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Export Modal */}
+      {showExportModal && (
+        <div className="modal-overlay" onClick={closeModals}>
+          <div
+            className="modal-content-white"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h2>
+                Export{" "}
+                {exportType.charAt(0).toUpperCase() + exportType.slice(1)}
+              </h2>
+              <button className="modal-close" onClick={closeModals}>
+                ×
+              </button>
+            </div>
+            <form onSubmit={handleExportData}>
+              {exportType === "tickets" && (
+                <>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>Date From</label>
+                      <input
+                        type="date"
+                        value={exportFilters.date_from}
+                        onChange={(e) =>
+                          setExportFilters({
+                            ...exportFilters,
+                            date_from: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Date To</label>
+                      <input
+                        type="date"
+                        value={exportFilters.date_to}
+                        onChange={(e) =>
+                          setExportFilters({
+                            ...exportFilters,
+                            date_to: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>Status</label>
+                      <select
+                        value={exportFilters.status}
+                        onChange={(e) =>
+                          setExportFilters({
+                            ...exportFilters,
+                            status: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="">All Statuses</option>
+                        <option value="open">Open</option>
+                        <option value="closed">Closed</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Priority</label>
+                      <select
+                        value={exportFilters.priority}
+                        onChange={(e) =>
+                          setExportFilters({
+                            ...exportFilters,
+                            priority: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="">All Priorities</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label>Assigned To</label>
+                    <select
+                      value={exportFilters.assigned_to}
+                      onChange={(e) =>
+                        setExportFilters({
+                          ...exportFilters,
+                          assigned_to: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="">All Users</option>
+                      {users.map((user) => (
+                        <option key={user.id} value={user.id}>
+                          {user.username}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </>
+              )}
+              {exportType === "users" && (
+                <p className="section-description">
+                  All users will be exported to CSV format.
+                </p>
+              )}
+              {exportType === "all" && (
+                <p className="section-description">
+                  All system data will be exported to CSV format.
+                </p>
+              )}
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="cancel-button"
+                  onClick={closeModals}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="save-button">
+                  Export Data
                 </button>
               </div>
             </form>
