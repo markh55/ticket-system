@@ -15,9 +15,8 @@
   margin-bottom: 30px;
   margin-right: 20px;
   padding: 30px;
-  background: white;
+  background: #0a0e27;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   max-height: calc(100vh - 150px);
   box-sizing: border-box;
@@ -26,7 +25,7 @@
 .settings-page .main-content h1 {
   font-size: 28px;
   margin: 0 0 30px 0;
-  color: #1f2937;
+  color: #ffffff;
   font-weight: 600;
   text-align: left;
 }
@@ -38,10 +37,10 @@
 
 .account-details-card {
   flex: 0 0 280px;
-  background: #f9fafb;
+  background: #1a1f3a;
   padding: 25px;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #2a2f4a;
   min-height: 450px;
   height: fit-content;
   display: flex;
@@ -62,7 +61,7 @@
   height: 120px;
   border-radius: 50%;
   overflow: hidden;
-  background: #e5e7eb;
+  background: #2a2f4a;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -84,7 +83,6 @@
   background: #4f46e5;
 }
 
-/* Profile Picture Buttons */
 .profile-picture-buttons {
   display: flex;
   gap: 10px;
@@ -129,7 +127,7 @@
 .account-details-card h2 {
   font-size: 18px;
   margin: 0 0 20px 0;
-  color: #1f2937;
+  color: #ffffff;
   font-weight: 600;
 }
 
@@ -138,7 +136,7 @@
   margin-top: 10px;
   padding: 10px;
   background: transparent;
-  color: #6366f1;
+  color: white;
   border: 1px solid #6366f1;
   border-radius: 6px;
   font-size: 14px;
@@ -159,7 +157,7 @@
 .detail-item label {
   display: block;
   font-size: 12px;
-  color: #6b7280;
+  color: #9ca3af;
   margin-bottom: 5px;
   text-transform: uppercase;
   font-weight: 500;
@@ -167,7 +165,7 @@
 
 .detail-item p {
   margin: 0;
-  color: #1f2937;
+  color: #ffffff;
   font-size: 14px;
   font-weight: 500;
 }
@@ -191,23 +189,22 @@
 
 .profile-info-card,
 .settings-card {
-  background: #ffffff;
+  background: #1a1f3a;
   padding: 25px;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #2a2f4a;
 }
 
 .profile-info-card h2,
 .settings-card h2 {
   font-size: 18px;
   margin: 0 0 20px 0;
-  color: #1f2937;
+  color: #ffffff;
   font-weight: 600;
 }
 
 .section-description {
-  color: #6b7280;
+  color: #9ca3af;
   font-size: 14px;
   margin: 0 0 20px 0;
 }
@@ -215,7 +212,7 @@
 .change-password-button {
   padding: 10px 24px;
   background: #6366f1;
-  color: white;
+  color: white !important;
   border: none;
   border-radius: 6px;
   font-size: 14px;
@@ -228,7 +225,6 @@
   background: #4f46e5;
 }
 
-/* Profile Picture Upload */
 .profile-picture-upload {
   display: flex;
   align-items: center;
@@ -240,11 +236,11 @@
   height: 100px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid #e5e7eb;
+  border: 3px solid #2a2f4a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f9fafb;
+  background: #2a2f4a;
 }
 
 .profile-picture-preview img {
@@ -271,19 +267,18 @@
 
 .upload-hint {
   font-size: 12px;
-  color: #6b7280;
+  color: #9ca3af;
   margin: 0;
 }
 
-/* Signature */
 .signature-textarea {
   width: 100%;
   padding: 10px 14px;
-  background: white !important;
+  background: #2a2f4a !important;
   border: 1px solid #4f46e5 !important;
   border-radius: 6px;
   font-size: 14px;
-  color: #1f2937;
+  color: #ffffff;
   font-family: inherit;
   resize: vertical;
   box-sizing: border-box;
@@ -292,10 +287,9 @@
 .signature-textarea:focus {
   outline: none;
   border-color: #6366f1;
-  background: white;
+  background: #2a2f4a;
 }
 
-/* Notifications */
 .notification-section {
   margin-bottom: 25px;
 }
@@ -303,7 +297,7 @@
 .notification-section h3 {
   font-size: 16px;
   margin: 0 0 15px 0;
-  color: #1f2937;
+  color: #ffffff;
   font-weight: 500;
 }
 
@@ -315,7 +309,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  color: #374151;
+  color: #e5e7eb;
   font-size: 14px;
 }
 
@@ -327,7 +321,6 @@
   accent-color: #6366f1;
 }
 
-/* Working Hours */
 .working-hours-list {
   display: flex;
   flex-direction: column;
@@ -340,7 +333,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px;
-  background: #f9fafb;
+  background: #2a2f4a;
   border-radius: 6px;
 }
 
@@ -362,7 +355,7 @@
 .day-name {
   font-size: 14px;
   font-weight: 500;
-  color: #1f2937;
+  color: #ffffff;
 }
 
 .time-inputs {
@@ -373,31 +366,31 @@
 
 .time-inputs input[type="time"] {
   padding: 6px 10px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #2a2f4a;
   border-radius: 4px;
   font-size: 14px;
-  color: #1f2937;
+  color: #ffffff;
+  background: #2a2f4a;
 }
 
 .time-inputs span {
-  color: #6b7280;
+  color: #9ca3af;
   font-size: 14px;
 }
 
 .profile-info-card,
 .password-change-card {
-  background: #ffffff;
+  background: #1a1f3a;
   padding: 25px;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #2a2f4a;
 }
 
 .profile-info-card h2,
 .password-change-card h2 {
   font-size: 18px;
   margin: 0 0 20px 0;
-  color: #1f2937;
+  color: #ffffff;
   font-weight: 600;
 }
 
@@ -418,7 +411,7 @@
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: #374151;
+  color: #e5e7eb;
   font-size: 14px;
   font-weight: 500;
 }
@@ -426,11 +419,11 @@
 .form-group input {
   width: 100%;
   padding: 10px 14px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: #2a2f4a;
+  border: 1px solid #2a2f4a;
   border-radius: 6px;
   font-size: 14px;
-  color: #1f2937;
+  color: #ffffff;
   box-sizing: border-box;
   transition: border-color 0.2s;
 }
@@ -438,7 +431,7 @@
 .form-group input:focus {
   outline: none;
   border-color: #6366f1;
-  background: white;
+  background: #2a2f4a;
 }
 
 .save-button {
@@ -457,7 +450,6 @@
   background: #4f46e5;
 }
 
-/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -472,7 +464,7 @@
 }
 
 .modal-content-white {
-  background: white;
+  background: #1a1f3a;
   border-radius: 12px;
   padding: 32px;
   max-width: 500px;
@@ -488,13 +480,13 @@
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #2a2f4a;
 }
 
 .modal-header h2 {
   margin: 0;
   font-size: 24px;
-  color: #111827;
+  color: #ffffff;
   font-weight: 600;
 }
 
@@ -503,7 +495,7 @@
   border: none;
   font-size: 32px;
   cursor: pointer;
-  color: #6b7280;
+  color: #9ca3af;
   line-height: 1;
   padding: 0;
   width: 32px;
@@ -512,7 +504,7 @@
 }
 
 .modal-close:hover {
-  color: #111827;
+  color: #ffffff;
 }
 
 .modal-actions {
@@ -524,9 +516,9 @@
 
 .cancel-button {
   padding: 10px 24px;
-  border: 1px solid #d1d5db;
-  background: white;
-  color: #374151;
+  border: 1px solid #2a2f4a;
+  background: transparent;
+  color: #e5e7eb;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
@@ -534,6 +526,6 @@
 }
 
 .cancel-button:hover {
-  background: #f9fafb;
-  border-color: #9ca3af;
+  background: #2a2f4a;
+  border-color: #4a4f6a;
 }
