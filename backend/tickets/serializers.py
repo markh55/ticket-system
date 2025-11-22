@@ -5,13 +5,13 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class TicketSerializer(serializers.ModelSerializer):
-    assigned_to = serializers.SerializerMethodField()
+    assigned_to_info = serializers.SerializerMethodField(read_only=True)
     
     class Meta:
         model = Ticket
         fields = '__all__'
     
-    def get_assigned_to(self, obj):
+    def get_assigned_to_info(self, obj):
         if obj.assigned_to:
             return {
                 'id': obj.assigned_to.id,
@@ -19,6 +19,12 @@ class TicketSerializer(serializers.ModelSerializer):
                 'email': obj.assigned_to.email
             }
         return None
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        # Replace assigned_to (which is just an ID) with the full user info
+        representation['assigned_to'] = self.get_assigned_to_info(instance)
+        return representation
 
 class ReplySerializer(serializers.ModelSerializer):
     created_by_info = serializers.SerializerMethodField()

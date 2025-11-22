@@ -16,6 +16,30 @@ class TicketViewSet(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
     permission_classes = [IsAuthenticated]
     
+    @action(detail=True, methods=['post'])
+    def assign(self, request, pk=None):
+        ticket = self.get_object()
+        agent_id = request.data.get('agent')
+        
+        if not agent_id:
+            return Response(
+                {'error': 'Agent ID is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            agent = User.objects.get(id=agent_id)
+            ticket.assigned_to = agent
+            ticket.save()
+            
+            serializer = self.get_serializer(ticket)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'Agent not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+    
     @action(detail=False, methods=['get'])
     def stats(self, request):
         total = Ticket.objects.count()
@@ -67,7 +91,7 @@ class TicketViewSet(viewsets.ModelViewSet):
             activity.append({
                 'type': 'ticket',
                 'id': ticket.id,
-                'ticket_id': ticket.id,  # Added this for consistency
+                'ticket_id': ticket.id,
                 'subject': ticket.subject,
                 'sender': ticket.sender,
                 'status': ticket.status,
@@ -79,7 +103,7 @@ class TicketViewSet(viewsets.ModelViewSet):
             activity.append({
                 'type': 'reply',
                 'id': reply.id,
-                'ticket_id': reply.ticket.id,  # FIXED: Added ticket_id
+                'ticket_id': reply.ticket.id,
                 'ticket_subject': reply.ticket.subject,
                 'sender': reply.sender,
                 'is_staff_reply': reply.is_staff_reply,
