@@ -14,7 +14,7 @@ export default function Dashboard() {
     in_progress: 0,
     completed: 0,
     unassigned: 0,
-    high_priority: 0
+    high_priority: 0,
   });
   const [chartData, setChartData] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
@@ -25,28 +25,36 @@ export default function Dashboard() {
       try {
         const token = localStorage.getItem("token");
         const headers = {
-          "Authorization": `Token ${token}`,
-          "Content-Type": "application/json"
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
         };
 
-        const statsResponse = await fetch("http://127.0.0.1:8000/api/tickets/stats/", { headers });
+        const statsResponse = await fetch(
+          "http://127.0.0.1:8000/api/tickets/stats/",
+          { headers }
+        );
         if (statsResponse.ok) {
           const statsData = await statsResponse.json();
           setStats(statsData);
         }
 
-        const chartResponse = await fetch("http://127.0.0.1:8000/api/tickets/chart_data/", { headers });
+        const chartResponse = await fetch(
+          "http://127.0.0.1:8000/api/tickets/chart_data/",
+          { headers }
+        );
         if (chartResponse.ok) {
           const chartData = await chartResponse.json();
           setChartData(chartData);
         }
 
-        const activityResponse = await fetch("http://127.0.0.1:8000/api/tickets/recent_activity/", { headers });
+        const activityResponse = await fetch(
+          "http://127.0.0.1:8000/api/tickets/recent_activity/",
+          { headers }
+        );
         if (activityResponse.ok) {
           const activityData = await activityResponse.json();
           setRecentActivity(activityData);
         }
-
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -67,45 +75,45 @@ export default function Dashboard() {
   };
 
   const handleActivityClick = (ticketId) => {
-    navigate(`/tickets/${ticketId}`);
+    navigate(`/ticketdetail/${ticketId}`);
   };
 
   return (
     <div className="dashboard-container">
       <Sidebar />
       <Topbar onLogout={handleLogout} />
-      
+
       <div className="main-content">
         <div className="tiles-container">
-          <Tiles 
-            title="Total" 
-            count={loading ? "..." : stats.total} 
+          <Tiles
+            title="Total"
+            count={loading ? "..." : stats.total}
             variant="small"
-            onClick={() => handleTileClick('all')}
+            onClick={() => handleTileClick("all")}
           />
-          <Tiles 
-            title="In Progress" 
-            count={loading ? "..." : stats.in_progress} 
+          <Tiles
+            title="In Progress"
+            count={loading ? "..." : stats.in_progress}
             variant="small"
-            onClick={() => handleTileClick('open')}
+            onClick={() => handleTileClick("open")}
           />
-          <Tiles 
-            title="Completed" 
-            count={loading ? "..." : stats.completed} 
+          <Tiles
+            title="Completed"
+            count={loading ? "..." : stats.completed}
             variant="small"
-            onClick={() => handleTileClick('closed')}
+            onClick={() => handleTileClick("closed")}
           />
-          <Tiles 
-            title="Unassigned" 
-            count={loading ? "..." : stats.unassigned} 
+          <Tiles
+            title="Unassigned"
+            count={loading ? "..." : stats.unassigned}
             variant="small"
-            onClick={() => handleTileClick('unassigned')}
+            onClick={() => handleTileClick("unassigned")}
           />
-          <Tiles 
-            title="High Priority" 
-            count={loading ? "..." : stats.high_priority} 
+          <Tiles
+            title="High Priority"
+            count={loading ? "..." : stats.high_priority}
             variant="small"
-            onClick={() => handleTileClick('high_priority')}
+            onClick={() => handleTileClick("high_priority")}
           />
         </div>
 
@@ -114,8 +122,8 @@ export default function Dashboard() {
             <Graph data={chartData} />
           </div>
           <div className="tile tile-medium">
-            <Recents 
-              activities={recentActivity} 
+            <Recents
+              activities={recentActivity}
               onActivityClick={handleActivityClick}
             />
           </div>
