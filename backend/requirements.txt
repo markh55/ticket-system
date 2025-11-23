@@ -10,3 +10,4 @@ django-cors-headers==4.3.0
 python-dotenv
 psycopg2-binary
 dj-database-url
+Pillow
