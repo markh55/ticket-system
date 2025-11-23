@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Sidebar from "../Dashboard/Sidebar/Sidebar";
 import Topbar from "../Dashboard/Topbar/Topbar";
 import "./Admin.css";
@@ -55,12 +55,7 @@ export default function Admin() {
 
   const getToken = () => localStorage.getItem("token");
 
-  useEffect(() => {
-    fetchUsers();
-    fetchRoles();
-  }, []);
-
-  const fetchUsers = () => {
+  const fetchUsers = useCallback(() => {
     fetch("http://localhost:8000/api/admin/users/", {
       headers: {
         Authorization: `Token ${getToken()}`,
@@ -70,9 +65,9 @@ export default function Admin() {
       .then((res) => res.json())
       .then((data) => setUsers(data))
       .catch((err) => console.error("Error fetching users:", err));
-  };
+  }, []);
 
-  const fetchRoles = () => {
+  const fetchRoles = useCallback(() => {
     fetch("http://localhost:8000/api/admin/roles/", {
       headers: {
         Authorization: `Token ${getToken()}`,
@@ -85,7 +80,12 @@ export default function Admin() {
         setRoles(data);
       })
       .catch((err) => console.error("Error fetching roles:", err));
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchUsers();
+    fetchRoles();
+  }, [fetchUsers, fetchRoles]);
 
   const handleCreateUser = (e) => {
     e.preventDefault();
