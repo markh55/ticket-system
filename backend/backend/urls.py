@@ -42,6 +42,8 @@ urlpatterns = [
     path('api/tickets/', include('tickets.urls')),
     path('api/emails/', include('emails.urls')),
 
+    # Catch-all: serve React app for any other route
+    re_path(r'^.*', TemplateView.as_view(template_name='index.html')),
 ]
 
 # Serve media files in development
