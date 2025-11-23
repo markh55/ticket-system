@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-nzzh8wb_ahtt%bn=z)l#ht6sbr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ['ticket-system-dhww.onrender.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['ticket-system-vt1r.onrender.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -158,7 +158,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
-    'https://ticket-system-dhww.onrender.com',
+    'https://ticket-system-vt1r.onrender.com',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -166,7 +166,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
-    'https://ticket-system-dhww.onrender.com',
+    'https://ticket-system-vt1r.onrender.com',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
