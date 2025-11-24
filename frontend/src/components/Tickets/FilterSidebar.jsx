@@ -22,7 +22,10 @@ const FilterSidebar = ({
     const token = localStorage.getItem("token");
 
     fetch(
-      `${process.env.REACT_APP_API_URL || "http://localhost:8000"}/api/users/`,
+      `${
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
+      }/api/users/`,
       {
         headers: {
           Authorization: `Token ${token}`,

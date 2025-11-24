@@ -49,7 +49,10 @@ const TicketDetail = () => {
     const token = localStorage.getItem("token");
 
     fetch(
-      `${process.env.REACT_APP_API_URL || "http://localhost:8000"}/api/user/`,
+      `${
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
+      }/api/user/`,
       {
         headers: {
           Authorization: `Token ${token}`,
@@ -67,7 +70,10 @@ const TicketDetail = () => {
       });
 
     fetch(
-      `${process.env.REACT_APP_API_URL || "http://localhost:8000"}/api/users/`,
+      `${
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
+      }/api/users/`,
       {
         headers: {
           Authorization: `Token ${token}`,
@@ -86,7 +92,8 @@ const TicketDetail = () => {
 
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/tickets/${id}/`,
       {
         headers: {
@@ -105,7 +112,8 @@ const TicketDetail = () => {
 
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/tickets/${id}/replies/`,
       {
         headers: {
@@ -165,7 +173,8 @@ const TicketDetail = () => {
 
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/tickets/${id}/assign/`,
       {
         method: "POST",
@@ -234,7 +243,8 @@ const TicketDetail = () => {
 
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/tickets/${id}/replies/`,
       {
         method: "POST",
@@ -280,7 +290,8 @@ const TicketDetail = () => {
     if (window.confirm("Are you sure you want to delete this note?")) {
       fetch(
         `${
-          process.env.REACT_APP_API_URL || "http://localhost:8000"
+          process.env.REACT_APP_API_URL ||
+          "https://ticket-system-dakb.onrender.com"
         }/api/tickets/${id}/replies/${replyId}/`,
         {
           method: "DELETE",

@@ -23,7 +23,8 @@ const TicketList = () => {
 
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/tickets/`,
       {
         headers: {
@@ -225,7 +226,8 @@ const TicketList = () => {
       selectedTickets.map((ticketId) =>
         fetch(
           `${
-            process.env.REACT_APP_API_URL || "http://localhost:8000"
+            process.env.REACT_APP_API_URL ||
+            "https://ticket-system-dakb.onrender.com"
           }/api/tickets/${ticketId}/`,
           {
             method: "DELETE",

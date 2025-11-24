@@ -31,7 +31,8 @@ export default function Dashboard() {
 
         const statsResponse = await fetch(
           `${
-            process.env.REACT_APP_API_URL || "http://127.0.0.1:8000"
+            process.env.REACT_APP_API_URL ||
+            "https://ticket-system-dakb.onrender.com"
           }/api/tickets/stats/`,
           { headers }
         );
@@ -42,7 +43,8 @@ export default function Dashboard() {
 
         const chartResponse = await fetch(
           `${
-            process.env.REACT_APP_API_URL || "http://127.0.0.1:8000"
+            process.env.REACT_APP_API_URL ||
+            "https://ticket-system-dakb.onrender.com"
           }/api/tickets/chart_data/`,
           { headers }
         );
@@ -53,7 +55,8 @@ export default function Dashboard() {
 
         const activityResponse = await fetch(
           `${
-            process.env.REACT_APP_API_URL || "http://127.0.0.1:8000"
+            process.env.REACT_APP_API_URL ||
+            "https://ticket-system-dakb.onrender.com"
           }/api/tickets/recent_activity/`,
           { headers }
         );

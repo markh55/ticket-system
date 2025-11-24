@@ -5,7 +5,7 @@ function TestConnection() {
   const [status, setStatus] = useState('Testing connection...');
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000'}/tickets/`)
+    axios.get(`${process.env.REACT_APP_API_URL || 'https://ticket-system-dakb.onrender.com'}/tickets/`)
       .then(response => {
         setStatus('✅ Connected to Django! Got response: ' + JSON.stringify(response.data));
       })

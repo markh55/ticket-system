@@ -31,7 +31,10 @@ const Settings = () => {
 
   useEffect(() => {
     fetch(
-      `${process.env.REACT_APP_API_URL || "http://localhost:8000"}/api/user/`,
+      `${
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
+      }/api/user/`,
       {
         headers: {
           Authorization: `Token ${getToken()}`,
@@ -68,7 +71,8 @@ const Settings = () => {
 
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/change-password/`,
       {
         method: "POST",
@@ -108,7 +112,8 @@ const Settings = () => {
 
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/user/update/`,
       {
         method: "PUT",
@@ -140,7 +145,8 @@ const Settings = () => {
   const handleSaveSignature = () => {
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/user/signature/`,
       {
         method: "POST",
@@ -165,7 +171,8 @@ const Settings = () => {
   const handleSaveNotifications = () => {
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/user/notifications/`,
       {
         method: "POST",

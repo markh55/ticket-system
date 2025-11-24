@@ -58,7 +58,8 @@ export default function Admin() {
   const fetchUsers = useCallback(() => {
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/admin/users/`,
       {
         headers: {
@@ -75,7 +76,8 @@ export default function Admin() {
   const fetchRoles = useCallback(() => {
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/admin/roles/`,
       {
         headers: {
@@ -101,7 +103,8 @@ export default function Admin() {
     e.preventDefault();
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/admin/users/create/`,
       {
         method: "POST",
@@ -139,7 +142,8 @@ export default function Admin() {
     e.preventDefault();
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/admin/users/${selectedUser.id}/update/`,
       {
         method: "PUT",
@@ -171,7 +175,8 @@ export default function Admin() {
 
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/admin/users/${userId}/delete/`,
       {
         method: "DELETE",
@@ -206,7 +211,8 @@ export default function Admin() {
 
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/admin/export/${exportType}/`,
       {
         method: "POST",
@@ -245,7 +251,8 @@ export default function Admin() {
     e.preventDefault();
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/admin/roles/create/`,
       {
         method: "POST",
@@ -291,7 +298,8 @@ export default function Admin() {
     e.preventDefault();
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/admin/roles/${selectedRole.id}/update/`,
       {
         method: "PUT",
@@ -339,7 +347,8 @@ export default function Admin() {
 
     fetch(
       `${
-        process.env.REACT_APP_API_URL || "http://localhost:8000"
+        process.env.REACT_APP_API_URL ||
+        "https://ticket-system-dakb.onrender.com"
       }/api/admin/roles/${roleId}/delete/`,
       {
         method: "DELETE",
