@@ -30,12 +30,15 @@ const Settings = () => {
   const getToken = () => localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/user/", {
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      `${process.env.REACT_APP_API_URL || "http://localhost:8000"}/api/user/`,
+      {
+        headers: {
+          Authorization: `Token ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         setCurrentUser(data);
@@ -63,17 +66,22 @@ const Settings = () => {
       return;
     }
 
-    fetch("http://localhost:8000/api/change-password/", {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        old_password: currentPassword,
-        new_password: newPassword,
-      }),
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/change-password/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          old_password: currentPassword,
+          new_password: newPassword,
+        }),
+      }
+    )
       .then((res) => {
         if (!res.ok)
           return res.json().then((err) => {
@@ -98,18 +106,23 @@ const Settings = () => {
   const handleProfileUpdate = (e) => {
     e.preventDefault();
 
-    fetch("http://localhost:8000/api/user/update/", {
-      method: "PUT",
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        first_name: firstName,
-        last_name: lastName,
-      }),
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/user/update/`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Token ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          first_name: firstName,
+          last_name: lastName,
+        }),
+      }
+    )
       .then((res) => {
         if (!res.ok)
           return res.json().then((err) => {
@@ -125,14 +138,19 @@ const Settings = () => {
   };
 
   const handleSaveSignature = () => {
-    fetch("http://localhost:8000/api/user/signature/", {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ signature }),
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/user/signature/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ signature }),
+      }
+    )
       .then((res) => {
         if (!res.ok)
           return res.json().then((err) => {
@@ -145,17 +163,22 @@ const Settings = () => {
   };
 
   const handleSaveNotifications = () => {
-    fetch("http://localhost:8000/api/user/notifications/", {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email_notifications: emailNotifications,
-        in_app_notifications: inAppNotifications,
-      }),
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/user/notifications/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email_notifications: emailNotifications,
+          in_app_notifications: inAppNotifications,
+        }),
+      }
+    )
       .then((res) => {
         if (!res.ok)
           return res.json().then((err) => {

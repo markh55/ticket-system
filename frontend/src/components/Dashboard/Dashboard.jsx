@@ -30,7 +30,9 @@ export default function Dashboard() {
         };
 
         const statsResponse = await fetch(
-          "http://127.0.0.1:8000/api/tickets/stats/",
+          `${
+            process.env.REACT_APP_API_URL || "http://127.0.0.1:8000"
+          }/api/tickets/stats/`,
           { headers }
         );
         if (statsResponse.ok) {
@@ -39,7 +41,9 @@ export default function Dashboard() {
         }
 
         const chartResponse = await fetch(
-          "http://127.0.0.1:8000/api/tickets/chart_data/",
+          `${
+            process.env.REACT_APP_API_URL || "http://127.0.0.1:8000"
+          }/api/tickets/chart_data/`,
           { headers }
         );
         if (chartResponse.ok) {
@@ -48,7 +52,9 @@ export default function Dashboard() {
         }
 
         const activityResponse = await fetch(
-          "http://127.0.0.1:8000/api/tickets/recent_activity/",
+          `${
+            process.env.REACT_APP_API_URL || "http://127.0.0.1:8000"
+          }/api/tickets/recent_activity/`,
           { headers }
         );
         if (activityResponse.ok) {

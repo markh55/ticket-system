@@ -56,24 +56,34 @@ export default function Admin() {
   const getToken = () => localStorage.getItem("token");
 
   const fetchUsers = useCallback(() => {
-    fetch("http://localhost:8000/api/admin/users/", {
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/admin/users/`,
+      {
+        headers: {
+          Authorization: `Token ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => setUsers(data))
       .catch((err) => console.error("Error fetching users:", err));
   }, []);
 
   const fetchRoles = useCallback(() => {
-    fetch("http://localhost:8000/api/admin/roles/", {
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/admin/roles/`,
+      {
+        headers: {
+          Authorization: `Token ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log("Roles data from API:", data); // DEBUG
@@ -89,14 +99,19 @@ export default function Admin() {
 
   const handleCreateUser = (e) => {
     e.preventDefault();
-    fetch("http://localhost:8000/api/admin/users/create/", {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newUser),
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/admin/users/create/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newUser),
+      }
+    )
       .then((res) => {
         if (!res.ok)
           return res.json().then((err) => {
@@ -122,14 +137,19 @@ export default function Admin() {
 
   const handleUpdateUser = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:8000/api/admin/users/${selectedUser.id}/update/`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(selectedUser),
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/admin/users/${selectedUser.id}/update/`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Token ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(selectedUser),
+      }
+    )
       .then((res) => {
         if (!res.ok)
           return res.json().then((err) => {
@@ -149,12 +169,17 @@ export default function Admin() {
   const handleDeleteUser = (userId) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
-    fetch(`http://localhost:8000/api/admin/users/${userId}/delete/`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Token ${getToken()}`,
-      },
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/admin/users/${userId}/delete/`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Token ${getToken()}`,
+        },
+      }
+    )
       .then((res) => {
         if (!res.ok)
           return res.json().then((err) => {
@@ -179,14 +204,19 @@ export default function Admin() {
 
     const body = exportType === "tickets" ? exportFilters : {};
 
-    fetch(`http://localhost:8000/api/admin/export/${exportType}/`, {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/admin/export/${exportType}/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    )
       .then((res) => res.blob())
       .then((blob) => {
         const url = window.URL.createObjectURL(blob);
@@ -213,14 +243,19 @@ export default function Admin() {
 
   const handleCreateRole = (e) => {
     e.preventDefault();
-    fetch("http://localhost:8000/api/admin/roles/create/", {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(roleForm),
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/admin/roles/create/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(roleForm),
+      }
+    )
       .then((res) => {
         if (!res.ok)
           return res.json().then((err) => {
@@ -254,14 +289,19 @@ export default function Admin() {
 
   const handleUpdateRole = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:8000/api/admin/roles/${selectedRole.id}/update/`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Token ${getToken()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(roleForm),
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/admin/roles/${selectedRole.id}/update/`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Token ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(roleForm),
+      }
+    )
       .then((res) => {
         if (!res.ok)
           return res.json().then((err) => {
@@ -297,12 +337,17 @@ export default function Admin() {
   const handleDeleteRole = (roleId) => {
     if (!window.confirm("Are you sure you want to delete this role?")) return;
 
-    fetch(`http://localhost:8000/api/admin/roles/${roleId}/delete/`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Token ${getToken()}`,
-      },
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/admin/roles/${roleId}/delete/`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Token ${getToken()}`,
+        },
+      }
+    )
       .then((res) => {
         if (!res.ok)
           return res.json().then((err) => {

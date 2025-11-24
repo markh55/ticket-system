@@ -48,12 +48,15 @@ const TicketDetail = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:8000/api/user/", {
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      `${process.env.REACT_APP_API_URL || "http://localhost:8000"}/api/user/`,
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log("Current User:", data);
@@ -63,12 +66,15 @@ const TicketDetail = () => {
         console.error("Error fetching user:", error);
       });
 
-    fetch("http://localhost:8000/api/users/", {
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      `${process.env.REACT_APP_API_URL || "http://localhost:8000"}/api/users/`,
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log("Users:", data);
@@ -78,12 +84,17 @@ const TicketDetail = () => {
         console.error("Error fetching users:", error);
       });
 
-    fetch(`http://localhost:8000/api/tickets/${id}/`, {
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/tickets/${id}/`,
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         setTicket(data);
@@ -92,12 +103,17 @@ const TicketDetail = () => {
         console.error("Error fetching ticket:", error);
       });
 
-    fetch(`http://localhost:8000/api/tickets/${id}/replies/`, {
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/tickets/${id}/replies/`,
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log("Replies data:", data);
@@ -147,16 +163,21 @@ const TicketDetail = () => {
       return;
     }
 
-    fetch(`http://localhost:8000/api/tickets/${id}/assign/`, {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        agent: selectedAgent,
-      }),
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/tickets/${id}/assign/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          agent: selectedAgent,
+        }),
+      }
+    )
       .then((response) => {
         if (!response.ok)
           return response.json().then((err) => {
@@ -211,14 +232,19 @@ const TicketDetail = () => {
       payload.is_internal = true;
     }
 
-    fetch(`http://localhost:8000/api/tickets/${id}/replies/`, {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    })
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/tickets/${id}/replies/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    )
       .then((response) => {
         if (!response.ok)
           return response.json().then((err) => {
@@ -252,13 +278,18 @@ const TicketDetail = () => {
     const token = localStorage.getItem("token");
 
     if (window.confirm("Are you sure you want to delete this note?")) {
-      fetch(`http://localhost:8000/api/tickets/${id}/replies/${replyId}/`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Token ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
+      fetch(
+        `${
+          process.env.REACT_APP_API_URL || "http://localhost:8000"
+        }/api/tickets/${id}/replies/${replyId}/`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
         .then((response) => {
           if (response.ok) {
             setReplies(replies.filter((reply) => reply.id !== replyId));

@@ -1,68 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import Sidebar from '../Dashboard/Sidebar/Sidebar';
-import Topbar from '../Dashboard/Topbar/Topbar';
-import FilterSidebar from './FilterSidebar';
-import './TicketList.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Sidebar from "../Dashboard/Sidebar/Sidebar";
+import Topbar from "../Dashboard/Topbar/Topbar";
+import FilterSidebar from "./FilterSidebar";
+import "./TicketList.css";
 
 const TicketList = () => {
   const [tickets, setTickets] = useState([]);
   const [filteredTickets, setFilteredTickets] = useState([]);
   const [selectedTickets, setSelectedTickets] = useState([]);
-  const [sortBy, setSortBy] = useState('date-desc');
+  const [sortBy, setSortBy] = useState("date-desc");
   const [filters, setFilters] = useState({
     status: [],
     priority: [],
-    assignee: []
+    assignee: [],
   });
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    
-    fetch('http://localhost:8000/api/tickets/', {
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json',
+    const token = localStorage.getItem("token");
+
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/tickets/`,
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
       }
-    })
-      .then(response => response.json())
-      .then(data => {
-        const ticketData = Array.isArray(data) ? data : (data.results || []);
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const ticketData = Array.isArray(data) ? data : data.results || [];
         setTickets(ticketData);
         setFilteredTickets(ticketData);
-        console.log('Tickets loaded:', ticketData);
+        console.log("Tickets loaded:", ticketData);
       })
-      .catch(error => {
-        console.error('Error fetching tickets:', error);
+      .catch((error) => {
+        console.error("Error fetching tickets:", error);
       });
   }, []);
 
   // Apply URL filter on load
   useEffect(() => {
-    const filterParam = searchParams.get('filter');
+    const filterParam = searchParams.get("filter");
     if (filterParam && tickets.length > 0) {
       const newFilters = {
         status: [],
         priority: [],
-        assignee: []
+        assignee: [],
       };
 
       switch (filterParam) {
-        case 'open':
-          newFilters.status = ['open'];
+        case "open":
+          newFilters.status = ["open"];
           break;
-        case 'closed':
-          newFilters.status = ['closed'];
+        case "closed":
+          newFilters.status = ["closed"];
           break;
-        case 'unassigned':
-          newFilters.assignee = ['unassigned'];
+        case "unassigned":
+          newFilters.assignee = ["unassigned"];
           break;
-        case 'high_priority':
-          newFilters.priority = ['high'];
+        case "high_priority":
+          newFilters.priority = ["high"];
           break;
-        case 'all':
+        case "all":
         default:
           // Show all tickets
           break;
@@ -78,47 +83,54 @@ const TicketList = () => {
 
     // Filter by status
     if (filters.status.length > 0) {
-      filtered = filtered.filter(ticket => 
+      filtered = filtered.filter((ticket) =>
         filters.status.includes(ticket.status)
       );
     }
 
     // Filter by priority
     if (filters.priority.length > 0) {
-      filtered = filtered.filter(ticket => 
+      filtered = filtered.filter((ticket) =>
         filters.priority.includes(ticket.priority)
       );
     }
 
     // Filter by assignee
     if (filters.assignee.length > 0) {
-      filtered = filtered.filter(ticket => {
-        if (filters.assignee.includes('unassigned')) {
+      filtered = filtered.filter((ticket) => {
+        if (filters.assignee.includes("unassigned")) {
           return !ticket.assigned_to;
         }
         // Check if the ticket's assigned user matches any filter (by username or email)
-        return ticket.assigned_to && 
-               (filters.assignee.includes(ticket.assigned_to.username) || 
-                filters.assignee.includes(ticket.assigned_to.email));
+        return (
+          ticket.assigned_to &&
+          (filters.assignee.includes(ticket.assigned_to.username) ||
+            filters.assignee.includes(ticket.assigned_to.email))
+        );
       });
     }
 
     // Apply sorting
     const sorted = [...filtered].sort((a, b) => {
       switch (sortBy) {
-        case 'date-desc':
+        case "date-desc":
           return new Date(b.created_at) - new Date(a.created_at);
-        case 'date-asc':
+        case "date-asc":
           return new Date(a.created_at) - new Date(b.created_at);
-        case 'priority-high':
+        case "priority-high":
           const priorityOrder = { high: 3, medium: 2, low: 1 };
-          return (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0);
-        case 'priority-low':
+          return (
+            (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0)
+          );
+        case "priority-low":
           const priorityOrderLow = { high: 3, medium: 2, low: 1 };
-          return (priorityOrderLow[a.priority] || 0) - (priorityOrderLow[b.priority] || 0);
-        case 'status':
+          return (
+            (priorityOrderLow[a.priority] || 0) -
+            (priorityOrderLow[b.priority] || 0)
+          );
+        case "status":
           return a.status.localeCompare(b.status);
-        case 'subject':
+        case "subject":
           return a.subject.localeCompare(b.subject);
         default:
           return 0;
@@ -129,15 +141,15 @@ const TicketList = () => {
   }, [tickets, filters, sortBy]);
 
   const handleFilterChange = (filterType, value) => {
-    setFilters(prev => {
+    setFilters((prev) => {
       const currentFilters = prev[filterType];
       const newFilters = currentFilters.includes(value)
-        ? currentFilters.filter(item => item !== value)
+        ? currentFilters.filter((item) => item !== value)
         : [...currentFilters, value];
-      
+
       return {
         ...prev,
-        [filterType]: newFilters
+        [filterType]: newFilters,
       };
     });
   };
@@ -146,7 +158,7 @@ const TicketList = () => {
     const newFilters = {
       status: [],
       priority: [],
-      assignee: []
+      assignee: [],
     };
 
     // Add status filter
@@ -161,10 +173,12 @@ const TicketList = () => {
 
     // Add assignee filter
     if (filtersToApply.assignedTo) {
-      if (filtersToApply.assignedTo === 'unassigned') {
-        newFilters.assignee.push('unassigned');
+      if (filtersToApply.assignedTo === "unassigned") {
+        newFilters.assignee.push("unassigned");
       } else {
-        const user = users.find(u => u.id.toString() === filtersToApply.assignedTo);
+        const user = users.find(
+          (u) => u.id.toString() === filtersToApply.assignedTo
+        );
         if (user) {
           newFilters.assignee.push(user.username || user.email);
         }
@@ -176,54 +190,65 @@ const TicketList = () => {
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setSelectedTickets(filteredTickets.map(ticket => ticket.id));
+      setSelectedTickets(filteredTickets.map((ticket) => ticket.id));
     } else {
       setSelectedTickets([]);
     }
   };
 
   const handleSelectTicket = (ticketId) => {
-    setSelectedTickets(prev => {
+    setSelectedTickets((prev) => {
       if (prev.includes(ticketId)) {
-        return prev.filter(id => id !== ticketId);
+        return prev.filter((id) => id !== ticketId);
       } else {
         return [...prev, ticketId];
       }
     });
   };
 
-  const isAllSelected = filteredTickets.length > 0 && selectedTickets.length === filteredTickets.length;
+  const isAllSelected =
+    filteredTickets.length > 0 &&
+    selectedTickets.length === filteredTickets.length;
 
   const handleDeleteSelected = () => {
     if (selectedTickets.length === 0) return;
-    
-    const token = localStorage.getItem('token');
-    const confirmDelete = window.confirm(`Are you sure you want to delete ${selectedTickets.length} ticket(s)?`);
-    
+
+    const token = localStorage.getItem("token");
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete ${selectedTickets.length} ticket(s)?`
+    );
+
     if (!confirmDelete) return;
 
     // Delete each selected ticket
     Promise.all(
-      selectedTickets.map(ticketId =>
-        fetch(`http://localhost:8000/api/tickets/${ticketId}/`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Token ${token}`,
-            'Content-Type': 'application/json',
+      selectedTickets.map((ticketId) =>
+        fetch(
+          `${
+            process.env.REACT_APP_API_URL || "http://localhost:8000"
+          }/api/tickets/${ticketId}/`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Token ${token}`,
+              "Content-Type": "application/json",
+            },
           }
-        })
+        )
       )
     )
-    .then(() => {
-      // Remove deleted tickets from state
-      setTickets(prev => prev.filter(ticket => !selectedTickets.includes(ticket.id)));
-      setSelectedTickets([]);
-      console.log('Tickets deleted successfully');
-    })
-    .catch(error => {
-      console.error('Error deleting tickets:', error);
-      alert('Error deleting tickets. Please try again.');
-    });
+      .then(() => {
+        // Remove deleted tickets from state
+        setTickets((prev) =>
+          prev.filter((ticket) => !selectedTickets.includes(ticket.id))
+        );
+        setSelectedTickets([]);
+        console.log("Tickets deleted successfully");
+      })
+      .catch((error) => {
+        console.error("Error deleting tickets:", error);
+        alert("Error deleting tickets. Please try again.");
+      });
   };
 
   const handleSort = (sortValue) => {
@@ -235,45 +260,49 @@ const TicketList = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   const getStatusBadge = (status) => {
-    return status === 'open' ? 'First response due' : 'Closed';
+    return status === "open" ? "First response due" : "Closed";
   };
 
   return (
     <div className="dashboard-container">
       <Sidebar />
       <Topbar onLogout={handleLogout} />
-      
+
       <div className="main-content">
         <div className="content-wrapper">
-          
           <div className="ticket-list">
             <div className="ticket-list-header">
-              <h2>New tickets <span className="ticket-count">{filteredTickets.length}</span></h2>
+              <h2>
+                New tickets{" "}
+                <span className="ticket-count">{filteredTickets.length}</span>
+              </h2>
               <div className="ticket-actions">
                 {selectedTickets.length > 0 && (
-                  <button 
+                  <button
                     className="delete-selected-btn"
                     onClick={handleDeleteSelected}
                     style={{
-                      marginRight: '15px',
-                      padding: '8px 16px',
-                      backgroundColor: '#dc3545',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '14px'
+                      marginRight: "15px",
+                      padding: "8px 16px",
+                      backgroundColor: "#dc3545",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      fontSize: "14px",
                     }}
                   >
                     Delete ({selectedTickets.length})
                   </button>
                 )}
-                <span className="ticket-pagination">1 - {filteredTickets.length} of {filteredTickets.length}</span>
+                <span className="ticket-pagination">
+                  1 - {filteredTickets.length} of {filteredTickets.length}
+                </span>
               </div>
             </div>
 
@@ -282,8 +311,8 @@ const TicketList = () => {
                 <thead>
                   <tr>
                     <th>
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={isAllSelected}
                         onChange={handleSelectAll}
                       />
@@ -297,16 +326,16 @@ const TicketList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredTickets.map(ticket => (
-                    <tr 
-                      key={ticket.id} 
+                  {filteredTickets.map((ticket) => (
+                    <tr
+                      key={ticket.id}
                       className="ticket-row"
                       onClick={() => handleRowClick(ticket.id)}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     >
                       <td onClick={(e) => e.stopPropagation()}>
-                        <input 
-                          type="checkbox" 
+                        <input
+                          type="checkbox"
                           checked={selectedTickets.includes(ticket.id)}
                           onChange={() => handleSelectTicket(ticket.id)}
                         />
@@ -325,10 +354,14 @@ const TicketList = () => {
                       </td>
                       <td className="ticket-group">--</td>
                       <td className="ticket-agent">
-                        {ticket.assigned_to ? ticket.assigned_to.username : '--'}
+                        {ticket.assigned_to
+                          ? ticket.assigned_to.username
+                          : "--"}
                       </td>
                       <td>
-                        <span className={`priority-badge priority-${ticket.priority}`}>
+                        <span
+                          className={`priority-badge priority-${ticket.priority}`}
+                        >
                           {ticket.priority}
                         </span>
                       </td>
@@ -339,7 +372,7 @@ const TicketList = () => {
             </div>
           </div>
 
-          <FilterSidebar 
+          <FilterSidebar
             filters={filters}
             onFilterChange={handleFilterChange}
             onApplyFilters={handleApplyFilters}

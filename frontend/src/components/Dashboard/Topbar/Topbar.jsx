@@ -30,31 +30,37 @@ export default function Topbar({ onLogout }) {
     }
 
     setIsSearching(true);
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:8000/api/tickets/`, {
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json',
+    fetch(
+      `${
+        process.env.REACT_APP_API_URL || "http://localhost:8000"
+      }/api/tickets/`,
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
       }
-    })
-      .then(response => response.json())
-      .then(data => {
-        const tickets = Array.isArray(data) ? data : (data.results || []);
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const tickets = Array.isArray(data) ? data : data.results || [];
         const query = searchQuery.toLowerCase();
-        
-        const filtered = tickets.filter(ticket => 
-          ticket.subject.toLowerCase().includes(query) ||
-          ticket.sender.toLowerCase().includes(query) ||
-          ticket.body.toLowerCase().includes(query)
+
+        const filtered = tickets.filter(
+          (ticket) =>
+            ticket.subject.toLowerCase().includes(query) ||
+            ticket.sender.toLowerCase().includes(query) ||
+            ticket.body.toLowerCase().includes(query)
         );
 
         setSearchResults(filtered);
         setShowResults(true);
         setIsSearching(false);
       })
-      .catch(error => {
-        console.error('Search error:', error);
+      .catch((error) => {
+        console.error("Search error:", error);
         setIsSearching(false);
       });
   }, [searchQuery]);
@@ -68,12 +74,30 @@ export default function Topbar({ onLogout }) {
   return (
     <div className="topbar">
       <div className="search-container" ref={searchRef}>
-        <svg className="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M7 12C9.76142 12 12 9.76142 12 7C12 4.23858 9.76142 2 7 2C4.23858 2 2 4.23858 2 7C2 9.76142 4.23858 12 7 12Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M14 14L10.5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <svg
+          className="search-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+        >
+          <path
+            d="M7 12C9.76142 12 12 9.76142 12 7C12 4.23858 9.76142 2 7 2C4.23858 2 2 4.23858 2 7C2 9.76142 4.23858 12 7 12Z"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M14 14L10.5 10.5"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
-        <input 
-          type="text" 
+        <input
+          type="text"
           placeholder="Search tickets..."
           className="search-input"
           value={searchQuery}
@@ -85,8 +109,8 @@ export default function Topbar({ onLogout }) {
             {isSearching ? (
               <div className="search-result-item">Searching...</div>
             ) : searchResults.length > 0 ? (
-              searchResults.map(ticket => (
-                <div 
+              searchResults.map((ticket) => (
+                <div
                   key={ticket.id}
                   className="search-result-item"
                   onClick={() => handleResultClick(ticket.id)}
@@ -106,8 +130,10 @@ export default function Topbar({ onLogout }) {
           </div>
         )}
       </div>
-      
-      <button className="logout-btn" onClick={onLogout}>Logout</button>
+
+      <button className="logout-btn" onClick={onLogout}>
+        Logout
+      </button>
     </div>
   );
 }
