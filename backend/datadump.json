@@ -1,0 +1,431 @@
+[
+{
+    "model": "auth.group",
+    "fields": {
+        "name": "Customer Support",
+        "permissions": [
+            [
+                "change_ticket",
+                "tickets",
+                "ticket"
+            ],
+            [
+                "view_ticket",
+                "tickets",
+                "ticket"
+            ]
+        ]
+    }
+},
+{
+    "model": "auth.group",
+    "fields": {
+        "name": "Administrator",
+        "permissions": [
+            [
+                "add_group",
+                "auth",
+                "group"
+            ],
+            [
+                "change_group",
+                "auth",
+                "group"
+            ],
+            [
+                "delete_group",
+                "auth",
+                "group"
+            ],
+            [
+                "add_ticket",
+                "tickets",
+                "ticket"
+            ],
+            [
+                "change_ticket",
+                "tickets",
+                "ticket"
+            ],
+            [
+                "delete_ticket",
+                "tickets",
+                "ticket"
+            ],
+            [
+                "view_ticket",
+                "tickets",
+                "ticket"
+            ],
+            [
+                "add_user",
+                "users",
+                "user"
+            ],
+            [
+                "change_user",
+                "users",
+                "user"
+            ],
+            [
+                "delete_user",
+                "users",
+                "user"
+            ],
+            [
+                "view_user",
+                "users",
+                "user"
+            ]
+        ]
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "2b2mcrh9iq04c8v548yqfvk8bat5mj9s",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hBo6QAu3XsGMjNMpWpoUtqV8e7apAvd_vfef6mE21rS1mRJU1ZnZdXpdyPkh9Qd5DvW26x5rusykd4VfdCmr3OW5-Vw_w4KtvKtIUYfjTCDdcFlZGRgGE0YzSC97ZwXjhA8OYhiOiLLjsOQgdDH3qB6fwDg8Tfg:1vMvhQ:zutBTFLKXqha_W9Jula9GvE-iiI-HprrCvEBp6WrRmA",
+        "expire_date": "2025-12-06T22:03:20.914Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "h561uswbvjfk5769ki7ui9gssoir6ryr",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hBo6QAu3XsGMjNMpWpoUtqV8e7apAvd_vfef6mE21rS1mRJU1ZnZdXpdyPkh9Qd5DvW26x5rusykd4VfdCmr3OW5-Vw_w4KtvKtIUYfjTCDdcFlZGRgGE0YzSC97ZwXjhA8OYhiOiLLjsOQgdDH3qB6fwDg8Tfg:1vMug2:Bp13Fb3hYkSb9RDzFlvLCorRnEc7oUXkdStpzQiJzbg",
+        "expire_date": "2025-12-06T20:57:50.192Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "kv2ibjlfl89upxlud3fjfndkzr0joan2",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlnrjeUPJT1nsHbjNQ4gR4qTCnF3iJQC2jcz76USbWtNW5clTVmdlVGn341pfEjbQb5Tu816nNu6TKx3RR-06-uc5Xk53L-DSr1-a1-icJEBCwP4iEI2ckDGIVgTi2WEzEAYHIoJTrx3AtEQel8AMKr3B-XLN0U:1vL8WR:xPtg9_t9TwA_IaxQrVO8j-_iM_Pu5vtrnxJDecY2__w",
+        "expire_date": "2025-12-01T23:20:35.148Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "uslu4g7j9svzwws94fjxx52k3r09pr8q",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlnrjeUPJT1nsHbjNQ4gR4qTCnF3iJQC2jcz76USbWtNW5clTVmdlVGn341pfEjbQb5Tu816nNu6TKx3RR-06-uc5Xk53L-DSr1-a1-icJEBCwP4iEI2ckDGIVgTi2WEzEAYHIoJTrx3AtEQel8AMKr3B-XLN0U:1vLpll:LFzg4ZDB1JEDD5zMUFu13jPgR25vFR_w8uXZxnosyoc",
+        "expire_date": "2025-12-03T21:31:17.322Z"
+    }
+},
+{
+    "model": "users.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$dGxY9H9U4x3c6BucLl5ANS$NUPutW6egILKfz1yX0+iLCdHYEQaB2blgLseesrV0ok=",
+        "last_login": "2025-11-22T22:03:20.914Z",
+        "is_superuser": true,
+        "username": "mark",
+        "first_name": "Mark",
+        "last_name": "Hallett",
+        "email": "mark@test.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-11-10T21:41:18.506Z",
+        "profile_picture": "profile_pictures/logo.png",
+        "signature": "",
+        "email_notifications": {},
+        "in_app_notifications": {},
+        "working_hours": {
+            "monday": {
+                "enabled": false
+            }
+        },
+        "groups": [
+            [
+                "Administrator"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$Ip5tTf2UhCGkPGgYHJ9ydT$DktcsFTVMo9V7u3IM3m2MccQtnhsrY41P/a7Wh+xLCM=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "alex",
+        "first_name": "Alex",
+        "last_name": "",
+        "email": "alex@test",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-11-22T19:49:11.430Z",
+        "profile_picture": "",
+        "signature": "",
+        "email_notifications": {},
+        "in_app_notifications": {},
+        "working_hours": {},
+        "groups": [
+            [
+                "Customer Support"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "tickets.ticket",
+    "pk": 1,
+    "fields": {
+        "subject": "test count 1",
+        "body": "gddgdgd",
+        "sender": "test@me.com",
+        "status": "open",
+        "priority": "medium",
+        "assigned_to": [
+            "alex"
+        ],
+        "created_at": "2025-11-15T19:32:16.784Z",
+        "updated_at": "2025-11-22T22:34:10.996Z"
+    }
+},
+{
+    "model": "tickets.ticket",
+    "pk": 2,
+    "fields": {
+        "subject": "test count 2",
+        "body": "this is a test! hopefully you can see me",
+        "sender": "test@me.co.uk",
+        "status": "open",
+        "priority": "high",
+        "assigned_to": [
+            "mark"
+        ],
+        "created_at": "2025-11-15T19:32:38.076Z",
+        "updated_at": "2025-11-23T15:17:11.872Z"
+    }
+},
+{
+    "model": "tickets.reply",
+    "pk": 1,
+    "fields": {
+        "ticket": 2,
+        "parent_reply": null,
+        "sender": "mark@example.com",
+        "body": "test",
+        "is_staff_reply": true,
+        "is_internal": true,
+        "created_by": [
+            "mark"
+        ],
+        "created_at": "2025-11-19T23:26:30.985Z"
+    }
+},
+{
+    "model": "tickets.reply",
+    "pk": 3,
+    "fields": {
+        "ticket": 1,
+        "parent_reply": null,
+        "sender": "mark@example.com",
+        "body": "test",
+        "is_staff_reply": true,
+        "is_internal": true,
+        "created_by": [
+            "mark"
+        ],
+        "created_at": "2025-11-19T23:36:31.915Z"
+    }
+},
+{
+    "model": "tickets.reply",
+    "pk": 4,
+    "fields": {
+        "ticket": 2,
+        "parent_reply": null,
+        "sender": "mark@example.com",
+        "body": "test",
+        "is_staff_reply": true,
+        "is_internal": false,
+        "created_by": [
+            "mark"
+        ],
+        "created_at": "2025-11-19T23:57:17.920Z"
+    }
+},
+{
+    "model": "tickets.reply",
+    "pk": 5,
+    "fields": {
+        "ticket": 2,
+        "parent_reply": null,
+        "sender": "mark@example.com",
+        "body": "test to forward",
+        "is_staff_reply": true,
+        "is_internal": false,
+        "created_by": [
+            "mark"
+        ],
+        "created_at": "2025-11-19T23:57:34.898Z"
+    }
+},
+{
+    "model": "authtoken.token",
+    "pk": "266326f6f0ab0d60f86ffe31ffefb8c1e25329cd",
+    "fields": {
+        "user": [
+            "mark"
+        ],
+        "created": "2025-11-14T16:18:11.246Z"
+    }
+},
+{
+    "model": "authtoken.token",
+    "pk": "67ab72dc99e559d67de4b5fc72bbfbf34fbc694e",
+    "fields": {
+        "user": [
+            "alex"
+        ],
+        "created": "2025-11-22T19:49:31.763Z"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+        "action_time": "2025-11-15T19:32:16.785Z",
+        "user": [
+            "mark"
+        ],
+        "content_type": [
+            "tickets",
+            "ticket"
+        ],
+        "object_id": "1",
+        "object_repr": "test count 1 - test@me.com",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+        "action_time": "2025-11-15T19:32:38.077Z",
+        "user": [
+            "mark"
+        ],
+        "content_type": [
+            "tickets",
+            "ticket"
+        ],
+        "object_id": "2",
+        "object_repr": "test count 2 - test@me.co.uk",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+        "action_time": "2025-11-15T19:38:46.505Z",
+        "user": [
+            "mark"
+        ],
+        "content_type": [
+            "tickets",
+            "ticket"
+        ],
+        "object_id": "1",
+        "object_repr": "test count 1 - test@me.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+        "action_time": "2025-11-17T22:52:54.855Z",
+        "user": [
+            "mark"
+        ],
+        "content_type": [
+            "tickets",
+            "ticket"
+        ],
+        "object_id": "1",
+        "object_repr": "test count 1 - test@me.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Status\", \"Assigned User\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+        "action_time": "2025-11-17T23:27:45.763Z",
+        "user": [
+            "mark"
+        ],
+        "content_type": [
+            "tickets",
+            "ticket"
+        ],
+        "object_id": "1",
+        "object_repr": "test count 1 - test@me.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Assigned User\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+        "action_time": "2025-11-17T23:27:51.271Z",
+        "user": [
+            "mark"
+        ],
+        "content_type": [
+            "tickets",
+            "ticket"
+        ],
+        "object_id": "2",
+        "object_repr": "test count 2 - test@me.co.uk",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Assigned User\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+        "action_time": "2025-11-19T22:03:50.809Z",
+        "user": [
+            "mark"
+        ],
+        "content_type": [
+            "tickets",
+            "ticket"
+        ],
+        "object_id": "2",
+        "object_repr": "test count 2 - test@me.co.uk",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Body\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+        "action_time": "2025-11-22T21:01:47.642Z",
+        "user": [
+            "mark"
+        ],
+        "content_type": [
+            "tickets",
+            "ticket"
+        ],
+        "object_id": "2",
+        "object_repr": "test count 2 - test@me.co.uk",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Assigned User\"]}}]"
+    }
+}
+]
