@@ -82,15 +82,9 @@ export default function CalendarComponent() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #0f172a 0%, #1e40af 100%)",
-      }}
-    >
+    <div className="calendar-container">
       <Sidebar className="calendar-sidebar" />
-      <main style={{ flex: 1, padding: "20px", marginLeft: "260px" }}>
+      <main className="calendar-content">
         <Topbar onLogout={handleLogout} />
 
         <Calendar
@@ -98,7 +92,6 @@ export default function CalendarComponent() {
           events={events}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: "calc(100vh - 140px)", marginTop: "100px" }}
           onSelectEvent={handleSelectEvent}
           date={currentDate}
           onNavigate={(date) => setCurrentDate(date)}
