@@ -88,16 +88,6 @@
   margin-bottom: 20px;
   position: relative;
   z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-/* Move the add button (plus) to the right */
-.rbc-toolbar .rbc-btn-group:last-child {
-  margin-left: auto;
 }
 
 .rbc-toolbar button {
@@ -129,6 +119,35 @@
   font-weight: 600;
   font-size: 18px;
   flex-shrink: 0;
+}
+
+/* DESKTOP ONLY - Grid layout - ONE ROW */
+@media (min-width: 769px) {
+  .rbc-toolbar > div > div:first-child {
+    display: flex !important;
+    gap: 12px !important;
+    align-items: center !important;
+  }
+
+  .rbc-toolbar > div {
+    display: grid !important;
+    grid-template-columns: auto 1fr auto !important;
+    align-items: center !important;
+    gap: 24px !important;
+    width: 100% !important;
+  }
+
+  .rbc-toolbar > div > div:first-child {
+    justify-self: start;
+  }
+
+  .rbc-toolbar > div > div:nth-child(2) {
+    justify-self: center;
+  }
+
+  .rbc-toolbar > div > button:last-child {
+    justify-self: end;
+  }
 }
 
 .modal-overlay {
@@ -295,12 +314,10 @@
     border-radius: 12px;
   }
 
-  /* Hide desktop spacer on mobile */
   .toolbar-spacer {
     display: none !important;
   }
 
-  /* Plus button - make it a bit smaller */
   .add-event-btn {
     width: 44px !important;
     height: 44px !important;
@@ -313,7 +330,6 @@
     font-size: 11px !important;
   }
 
-  /* Make date bigger */
   .rbc-toolbar-label {
     font-size: 16px !important;
     font-weight: 600 !important;
