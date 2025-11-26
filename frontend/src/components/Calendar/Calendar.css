@@ -323,31 +323,41 @@
   .rbc-toolbar {
     display: flex !important;
     flex-direction: column !important;
-    gap: 16px;
+    gap: 12px;
     padding: 14px 10px;
     margin-bottom: 20px;
     flex-wrap: nowrap;
     align-items: stretch;
   }
 
-  .rbc-toolbar-label {
-    font-size: 18px !important;
-    font-weight: 600 !important;
-    order: 2;
-    text-align: center;
-    width: 100%;
-    margin: 8px 0;
-  }
-
-  .rbc-toolbar > span:first-child,
-  .rbc-toolbar > div:first-child {
-    order: 0;
+  /* Navigation buttons (< Today >) - stays at top */
+  .rbc-toolbar .rbc-btn-group:first-child {
+    order: 1;
     width: 100%;
     display: flex;
     justify-content: center;
+    gap: 10px;
   }
 
-  .rbc-toolbar > span:last-child,
+  /* View buttons (Month Week Day) - goes second */
+  .rbc-toolbar .rbc-btn-group:last-child {
+    order: 2;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* Date label (November 2025) - goes LAST/BOTTOM */
+  .rbc-toolbar .rbc-toolbar-label {
+    order: 3;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    text-align: center;
+    width: 100%;
+    margin: 8px 0 0 0;
+  }
+  d,
   .rbc-toolbar > div:last-child {
     order: 1;
     width: 100%;
