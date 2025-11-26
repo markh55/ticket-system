@@ -16,6 +16,7 @@ const FilterSidebar = ({
   const [resolvedAt, setResolvedAt] = useState("any");
   const [sortBy, setSortBy] = useState("date-desc");
   const [users, setUsers] = useState([]);
+  const [isOpen, setIsOpen] = useState(false); // Mobile slide-out state
 
   useEffect(() => {
     // Fetch users from backend for the Assigned to dropdown
@@ -117,131 +118,161 @@ const FilterSidebar = ({
     }
   };
 
+  const toggleFilters = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const closeFilters = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <div className="filter-sidebar">
-      <div className="filter-header">
-        <h3>FILTERS</h3>
-      </div>
+    <>
+      {/* Mobile Filter Toggle Button */}
+      <button className="filter-toggle-btn" onClick={toggleFilters}>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            d="M3 5h14M3 10h14M3 15h14"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+        Filters
+      </button>
 
-      <div className="filter-section">
-        <label className="filter-label">Sort by</label>
-        <select
-          value={sortBy}
-          onChange={handleSortChange}
-          className="filter-select"
-        >
-          <option value="date-desc">Date created (newest)</option>
-          <option value="date-asc">Date created (oldest)</option>
-          <option value="priority-high">Priority (high to low)</option>
-          <option value="priority-low">Priority (low to high)</option>
-          <option value="status">Status</option>
-          <option value="subject">Subject (A-Z)</option>
-        </select>
-      </div>
+      {/* Backdrop */}
+      {isOpen && <div className="filter-backdrop" onClick={closeFilters}></div>}
 
-      <div className="filter-section">
-        <label className="filter-label">Status</label>
-        <select
-          value={status}
-          onChange={handleStatusChange}
-          className="filter-select"
-        >
-          <option value="any">Any status</option>
-          <option value="open">Open</option>
-          <option value="closed">Closed</option>
-        </select>
-      </div>
+      {/* Filter Sidebar */}
+      <div className={`filter-sidebar ${isOpen ? "open" : ""}`}>
+        <div className="filter-header">
+          <h3>FILTERS</h3>
+          <button className="close-filters-btn" onClick={closeFilters}>
+            ×
+          </button>
+        </div>
 
-      <div className="filter-section">
-        <label className="filter-label">Priority</label>
-        <select
-          value={priority}
-          onChange={handlePriorityChange}
-          className="filter-select"
-        >
-          <option value="any">Any priority</option>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-      </div>
-
-      <div className="filter-section">
-        <label className="filter-label">Assigned to</label>
-        <div className="filter-input-group">
+        <div className="filter-section">
+          <label className="filter-label">Sort by</label>
           <select
-            value={assignedTo}
-            onChange={handleAssignedToChange}
+            value={sortBy}
+            onChange={handleSortChange}
             className="filter-select"
           >
-            <option value="any">Any Agent</option>
-            <option value="unassigned">Unassigned</option>
-            {users.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.username || user.email}
-              </option>
-            ))}
+            <option value="date-desc">Date created (newest)</option>
+            <option value="date-asc">Date created (oldest)</option>
+            <option value="priority-high">Priority (high to low)</option>
+            <option value="priority-low">Priority (low to high)</option>
+            <option value="status">Status</option>
+            <option value="subject">Subject (A-Z)</option>
           </select>
-          {assignedTo !== "any" && (
-            <button
-              className="clear-filter-btn"
-              onClick={() => setAssignedTo("any")}
-            >
-              ×
-            </button>
-          )}
         </div>
-      </div>
 
-      <div className="filter-section">
-        <label className="filter-label">Created at</label>
-        <select
-          value={createdAt}
-          onChange={(e) => setCreatedAt(e.target.value)}
-          className="filter-select"
-        >
-          <option value="any">Any time</option>
-          <option value="today">Today</option>
-          <option value="yesterday">Yesterday</option>
-          <option value="last7days">Last 7 days</option>
-          <option value="last30days">Last 30 days</option>
-        </select>
-      </div>
+        <div className="filter-section">
+          <label className="filter-label">Status</label>
+          <select
+            value={status}
+            onChange={handleStatusChange}
+            className="filter-select"
+          >
+            <option value="any">Any status</option>
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
 
-      <div className="filter-section">
-        <label className="filter-label">Closed at</label>
-        <select
-          value={closedAt}
-          onChange={(e) => setClosedAt(e.target.value)}
-          className="filter-select"
-        >
-          <option value="any">Any time</option>
-          <option value="today">Today</option>
-          <option value="yesterday">Yesterday</option>
-          <option value="last7days">Last 7 days</option>
-          <option value="last30days">Last 30 days</option>
-        </select>
-      </div>
+        <div className="filter-section">
+          <label className="filter-label">Priority</label>
+          <select
+            value={priority}
+            onChange={handlePriorityChange}
+            className="filter-select"
+          >
+            <option value="any">Any priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
 
-      <div className="filter-section">
-        <label className="filter-label">Resolved at</label>
-        <select
-          value={resolvedAt}
-          onChange={(e) => setResolvedAt(e.target.value)}
-          className="filter-select"
-        >
-          <option value="any">Any time</option>
-          <option value="today">Today</option>
-          <option value="yesterday">Yesterday</option>
-          <option value="last7days">Last 7 days</option>
-          <option value="last30days">Last 30 days</option>
-        </select>
-      </div>
+        <div className="filter-section">
+          <label className="filter-label">Assigned to</label>
+          <div className="filter-input-group">
+            <select
+              value={assignedTo}
+              onChange={handleAssignedToChange}
+              className="filter-select"
+            >
+              <option value="any">Any Agent</option>
+              <option value="unassigned">Unassigned</option>
+              {users.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.username || user.email}
+                </option>
+              ))}
+            </select>
+            {assignedTo !== "any" && (
+              <button
+                className="clear-filter-btn"
+                onClick={() => setAssignedTo("any")}
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
 
-      <button className="clear-all-btn" onClick={handleClearAll}>
-        Clear all
-      </button>
-    </div>
+        <div className="filter-section">
+          <label className="filter-label">Created at</label>
+          <select
+            value={createdAt}
+            onChange={(e) => setCreatedAt(e.target.value)}
+            className="filter-select"
+          >
+            <option value="any">Any time</option>
+            <option value="today">Today</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="last7days">Last 7 days</option>
+            <option value="last30days">Last 30 days</option>
+          </select>
+        </div>
+
+        <div className="filter-section">
+          <label className="filter-label">Closed at</label>
+          <select
+            value={closedAt}
+            onChange={(e) => setClosedAt(e.target.value)}
+            className="filter-select"
+          >
+            <option value="any">Any time</option>
+            <option value="today">Today</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="last7days">Last 7 days</option>
+            <option value="last30days">Last 30 days</option>
+          </select>
+        </div>
+
+        <div className="filter-section">
+          <label className="filter-label">Resolved at</label>
+          <select
+            value={resolvedAt}
+            onChange={(e) => setResolvedAt(e.target.value)}
+            className="filter-select"
+          >
+            <option value="any">Any time</option>
+            <option value="today">Today</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="last7days">Last 7 days</option>
+            <option value="last30days">Last 30 days</option>
+          </select>
+        </div>
+
+        <button className="clear-all-btn" onClick={handleClearAll}>
+          Clear all
+        </button>
+      </div>
+    </>
   );
 };
 

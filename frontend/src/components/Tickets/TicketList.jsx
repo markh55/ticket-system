@@ -308,6 +308,7 @@ const TicketList = () => {
               </div>
             </div>
 
+            {/* Desktop Table View */}
             <div className="ticket-table-container">
               <table className="ticket-table">
                 <thead>
@@ -371,6 +372,58 @@ const TicketList = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Cards View */}
+            <div className="ticket-cards-container">
+              {filteredTickets.map((ticket) => (
+                <div
+                  key={ticket.id}
+                  className="ticket-card"
+                  onClick={() => handleRowClick(ticket.id)}
+                >
+                  <div className="ticket-card-header">
+                    <div className="ticket-card-contact">
+                      <div className="contact-avatar">
+                        {ticket.sender.charAt(0).toUpperCase()}
+                      </div>
+                      <span>{ticket.sender}</span>
+                    </div>
+                    <div
+                      className="ticket-card-checkbox"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedTickets.includes(ticket.id)}
+                        onChange={() => handleSelectTicket(ticket.id)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="ticket-card-subject">{ticket.subject}</div>
+
+                  <div className="ticket-card-meta">
+                    <span className={`status-badge ${ticket.status}`}>
+                      {getStatusBadge(ticket.status)}
+                    </span>
+                    <span
+                      className={`priority-badge priority-${ticket.priority}`}
+                    >
+                      {ticket.priority}
+                    </span>
+                  </div>
+
+                  <div className="ticket-card-footer">
+                    <div className="ticket-card-agent">
+                      <strong>Agent:</strong>{" "}
+                      {ticket.assigned_to
+                        ? ticket.assigned_to.username
+                        : "Unassigned"}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
