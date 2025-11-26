@@ -333,7 +333,7 @@
   .rbc-toolbar-label {
     font-size: 18px !important;
     font-weight: 600 !important;
-    order: 1;
+    order: 2;
     text-align: center;
     width: 100%;
     margin: 8px 0;
@@ -349,7 +349,7 @@
 
   .rbc-toolbar > span:last-child,
   .rbc-toolbar > div:last-child {
-    order: 2;
+    order: 1;
     width: 100%;
     display: flex;
     justify-content: center;
