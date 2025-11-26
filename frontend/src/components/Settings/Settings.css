@@ -12,7 +12,7 @@
   flex-direction: column;
   margin-left: 275px;
   margin-top: 120px;
-  margin-bottom: 30px;
+  margin-bottom: 0 !important;
   margin-right: 20px;
   padding: 30px;
   background: #0a0e27;
